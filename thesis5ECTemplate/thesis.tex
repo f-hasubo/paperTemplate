@@ -17,21 +17,22 @@
 %\documentclass[senkouka,english]{nitkagawathesis}%特論（専攻科2年）英語用
 
 %%%%% タイトル %%%%%
-\title{\underline{北村研究室用}\\\underline{卒業論文テンプレートファイル}}
+\title{\underline{深層学習に基づく多チャネル音源分離のための}\\\underline{パーミュテーション解決の基礎的実験}}
 %\titlewidth{}% タイトル幅 (指定するときは単位つきで)
 
+
 %%%%% 著者 %%%%%
-\author{高専 太郎}
-\eauthor{Taro Kosen}% Copyright表示で使われる
+\author{蓮池 郁也}
+\eauthor{Fumiya Hasuike}% Copyright表示で使われる
 
 %%%%% 指導教員名 %%%%%
 \supervisor{北村 大地 講師}% 1つ引数をとる (役職まで含めて書く)
 
 %%%%% 副査教員名 %%%%%
-\reviewer{高専 花子 准教授}% 1つ引数をとる (役職まで含めて書く)
+\reviewer{雛元 洋一 助教}% 1つ引数をとる (役職まで含めて書く)
 
 %%%%% 学科長教員名 %%%%%
-\chairperson{高専 光男 教授}% 1つ引数をとる (役職まで含めて書く)
+\chairperson{辻 正敏 教授}% 1つ引数をとる (役職まで含めて書く)
 
 %%%%% 提出年月 %%%%%
 \date{令和X年X月X日} % 和暦表示（卒論はこっちが正しい）
@@ -49,35 +50,38 @@
 \frontmatter
 
 %%%%% English title %%%%%
-\etitle{Template File of Graduate Thesis Produced Only for Kitamura Laboratory}
+\etitle{Basic experiments on permutation resolution for multi-channel source separation based on deep learning.}
 
 %%%%% Abstract %%%%%
 \eabstract{ % これ単体で複数ページにまたがる場合はエラーが出るので注意，アブスト内で改段落は禁止
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
-  English abstract goes here. English abstract goes here. English abstract goes here. English abstract goes here.
+  In this thesis, we deal with audio source separation, which is a technique to separate audio sources from an
+  observed signal. This technology is useful in situations where multiple speech needs to be separated into the
+  individual speech sources. It can also be used to separate a target speech signal and the background noise.
+  One of the popular source separation methods is frequency-domain independent conponent analysis (FDICA).In FDICA,
+  the separation is performed with applying independent component analysis to each frequency. However, in FDICA,
+  the order of the estimated signal in each frequency is not aligned among all frequencies, resulting in the so-called
+  permutation problem.Thus, FDICA requires a permutation solver as a post-process. In recent years, independent
+  vector analysis and independent low-rank matrix analysis (ILRMA) have been proposed.These methods
+  introduce a source model to FDICA to avoid encountering the permutation problem. Although these methods can
+  avoid the permutation problem to some extent, for the mixture with strong reverberation, they often fail to separate
+  the sources. On the other hand, it has been confirmed in the previous study that FDICA can separate very high
+  quality for each frequency.Deep neural networks (DNNs) have been proposed to solve the permutation problem, however since the
+  input frequency activation for each subband is estimated to be the same source or not, source separation of three or more sources 
+  is not realistic from the viewpoint of computational complexity. 
 }
 
 %%%%% 概要 %%%%%
 \abstract{ % これ単体で複数ページにまたがる場合はエラーが出るので注意，アブスト内で改段落は禁止
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．
-  日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述．日本語の概要をここに記述
+ 音源分離とは，複数の未知の音源が混ざった観測信号から，混ざる前の個々の音源を推定する技術である．この技術は，複数人が同時に発話した内容をそれぞれの音声に分けたい場合や，背景雑音と音声を分離したいときに利用される．
+ 代表的な音源分離手法の1つとして周波数領域独立成分分析（frequency-domain independent conponent analysis: FDICA）がある．これは，周波数毎に独立成分分析を適用することで分離を行う．
+ しかしFDICA にはパーミュテーション問題と呼ばれる分離信号の並び替え問題が付随するため，ポスト処理としてパーミュテーション解決が必要となる．近年では，このパーミュテーション問題を可能な限り回避するような音源分離手法が提
+ 案されており，特に独立ベクトル分析（independent vector analysis: IVA）や独立低ランク行列分析（independent low-rank matrix analysis: ILRMA）が有名である．これらの手法では，パーミュテーション問題をある程度避けながら音源分離が可能である
+ が，より残響の強い観測信号に対しては，しばしば分離に失敗することが確認されている．一方で，FDICA では，周波数毎の音源分離は非常に高精度で実現できることが先行研究から確認できる．
+ これまで，深層ニューラルネットワーク（deep neural networks: DNNs）を用いたパーミュテーション問題の解決法が提案されてきたが，サブバンド毎に入力された周波数アクティベーションが同一音源か否かを推定しているため，
+ 3音源以上の音源分離は計算量の観点から現実的ではないことが課題として挙げられる．
+ 本論文では，DNNに基づくパーミュテーション問題，またブロック単位でのパーミュテーション問題に対して新たなアルゴリズムを提案する．提案手法のDNNは，分離信号の複雑な時間周波数構造の特徴を事前に
+ 学習し，全周波数ビンについてパーミュテーション不整合が生じているか否かを予測する．このDNNの予測結果を用いて，パーミュテーション問題を解決する．
+ 提案手法のパーミュテーション問題の解決性能は，音源信号を模倣した人工データに対する，全周波数ビンの正答率で評価する．実験結果から，提案するDNNパーミュテーション解決法は人工的に作成した擬似的なブロック単位でのパーミュテーション問題に対して，100\%に近い正答率を示した．
 }
 
 \keywords{Keyword1, Keyword2, Keyword3}
