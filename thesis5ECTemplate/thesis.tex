@@ -60,14 +60,15 @@
   One of the popular source separation methods is frequency-domain independent conponent analysis (FDICA).In FDICA,
   the separation is performed with applying independent component analysis to each frequency. However, in FDICA,
   the order of the estimated signal in each frequency is not aligned among all frequencies, resulting in the so-called
-  permutation problem.Thus, FDICA requires a permutation solver as a post-process. In recent years, independent
+  permutation problem. In recent years, independent
   vector analysis and independent low-rank matrix analysis (ILRMA) have been proposed.These methods
   introduce a source model to FDICA to avoid encountering the permutation problem. Although these methods can
   avoid the permutation problem to some extent, for the mixture with strong reverberation, they often fail to separate
-  the sources. On the other hand, it has been confirmed in the previous study that FDICA can separate very high
-  quality for each frequency.Deep neural networks (DNNs) have been proposed to solve the permutation problem, however since the
-  input frequency activation for each subband is estimated to be the same source or not, source separation of three or more sources 
-  is not realistic from the viewpoint of computational complexity. 
+  the sources. On the other hand, deep neural networks (DNNs) have been proposed to solve the permutation problem, but the problem is that source separation of more than three sources is not realistic from the viewpoint of computational complexity.
+  In this paper, we propose a new algorithm for the DNN-based permutation problem and the block-wise permutation problem.
+  The proposed DNN learns the characteristics of the complex time-frequency structure of the separated signals in advance and predicts whether the permutation mismatch occurs or not for 
+  all frequency bins. The performance of the proposed method in solving the permutation problem is evaluated by the percentage of correct answers in all frequency bins for artificial data that mimic the source signal.
+  The experimental results show that the proposed DNN permutation solution has a correct answer rate close to 100\% for artificially created pseudo block-wise permutation problems.  
 }
 
 %%%%% 概要 %%%%%
@@ -77,14 +78,13 @@
  しかしFDICA にはパーミュテーション問題と呼ばれる分離信号の並び替え問題が付随するため，ポスト処理としてパーミュテーション解決が必要となる．近年では，このパーミュテーション問題を可能な限り回避するような音源分離手法が提
  案されており，特に独立ベクトル分析（independent vector analysis: IVA）や独立低ランク行列分析（independent low-rank matrix analysis: ILRMA）が有名である．これらの手法では，パーミュテーション問題をある程度避けながら音源分離が可能である
  が，より残響の強い観測信号に対しては，しばしば分離に失敗することが確認されている．一方で，FDICA では，周波数毎の音源分離は非常に高精度で実現できることが先行研究から確認できる．
- これまで，深層ニューラルネットワーク（deep neural networks: DNNs）を用いたパーミュテーション問題の解決法が提案されてきたが，サブバンド毎に入力された周波数アクティベーションが同一音源か否かを推定しているため，
- 3音源以上の音源分離は計算量の観点から現実的ではないことが課題として挙げられる．
+ これまで，深層ニューラルネットワーク（deep neural networks: DNNs）を用いたパーミュテーション問題の解決法が提案されてきたが，3音源以上の音源分離は計算量の観点から現実的ではないことが課題として挙げられる．
  本論文では，DNNに基づくパーミュテーション問題，またブロック単位でのパーミュテーション問題に対して新たなアルゴリズムを提案する．提案手法のDNNは，分離信号の複雑な時間周波数構造の特徴を事前に
- 学習し，全周波数ビンについてパーミュテーション不整合が生じているか否かを予測する．このDNNの予測結果を用いて，パーミュテーション問題を解決する．
+ 学習し，全周波数ビンについてパーミュテーション不整合が生じているか否かを予測する．
  提案手法のパーミュテーション問題の解決性能は，音源信号を模倣した人工データに対する，全周波数ビンの正答率で評価する．実験結果から，提案するDNNパーミュテーション解決法は人工的に作成した擬似的なブロック単位でのパーミュテーション問題に対して，100\%に近い正答率を示した．
 }
 
-\keywords{Keyword1, Keyword2, Keyword3}
+\keywords{FDICA, Permutation-soluver, Deep neural networks}
 
 \makeseparatedabstract % 英語アブストと日本語アブストをそれぞれ独立したページとする
 %\makeabstract % 英語アブストと日本語アブスト合わせて1枚に収まる場合はこちらを使ってもよい，ただし2枚になる場合はエラーが出る
@@ -111,6 +111,12 @@
 \input{ch_conventional/ch_conventional.tex}
 
 %%%%% 第3章 %%%%%
+\input{ch_proposed/ch_proposed.tex}
+
+%%%%% 第4章 %%%%%
+\input{ch_experiment/ch_experiment.tex}
+
+%%%%% 第5章 %%%%%
 \input{ch_conclusion/ch_conclusion.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% 後付 %%%%%%%%%%%%%%%%%%%%%%%%%%%
