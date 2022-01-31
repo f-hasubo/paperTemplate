@@ -126,18 +126,92 @@
 \input{acknowledgment/acknowledgment.tex}
 
 %%%%% 参考文献（直接書く場合） %%%%%
-\addcontentsline{toc}{chapter}{\bibname} % 参考文献を目次に表示
+\addcontentsline{toc}{chapter}{\bibname}
 \begin{thebibliography}{99}
-  \bibitem{Kitamura2016taslp}
-  D.~Kitamura, N.~Ono, H.~Sawada, H.~Kameoka, and H.~Saruwatari,
-  ``Determined blind source separation unifying independent vector analysis and nonnegative matrix factorization,''
-  \emph{IEEE/ACM Transactions on Audio, Speech, and Language Processing}, vol. 24, no. 9, pp. 1626--1641, 2016.
-
-  \bibitem{Kitamura2016IWAENC}
-  D.~Kitamura, N.~Ono, H.~Saruwatari, Y.~Takahashi, and K. Kondo,
-  ``Discriminative and reconstructive basis training for audio source separation with semi-supervised nonnegative matrix factorization,''
-  \emph{in Proceedings of International Workshop on Acoustic Signal Enhancement}, 2016, pp. 1--5.
+  % 参考文献が10以上ある場合は{99}とする
+  %\itemsep -3pt             % 項目の間隔微調整用
+  %\fontsize{7.5pt}{10pt}\selectfont
+  
+  \bibitem{BSS}
+  H.~Sawada, N.~Ono, H.~Kameoka, D.~Kitamura, and H.~Saruwatari, "A review of blind source separation methods: Two converging routes to ILRMA originating from ICA and NMF," {\em APSIPA Transactions on Signal and Information Processing}, vol. 8, no. e12, pp. 1–14, 2019.
+  
+  \bibitem{ICA}
+  P.~Comon, ``Independent component analysis, a new concept?," {\em Signal Process.}, vol. 36, no. 3, pp. 287--314, 1994.
+  
+  \bibitem{FDICA}
+  P.~Smaragdis, ``Blind separation of convolved mixtures in the frequency domain," {\em Neurocomputing}, vol. 22, pp. 21--34, 1998.
+  
+  \bibitem{COR}
+  N.~Murata, S.~Ikeda, and A.~Ziehe, ``An approach to blind source separation based on temporal structure of speech signals,"  {\em Neurocomputing}, vol. 41, no. 1–4, pp. 1--24, 2001.
+  
+  \bibitem{DOA}
+  H.~Saruwatari, T.~Kawamura, T.~Nishikawa, A.~Lee, and K.~Shikano, ``Blind source separation based on a fast-convergence algorithm combining ICA and beamforming,"  {\em IEEE Trans. ASLP}, vol. 14, no. 2, pp. 666--678, 2006.
+  
+  \bibitem{DOACOR}
+  H.~Sawada, R.~Mukai, S.~Araki, and S.~Makino, ``A robust and precise method for solving the permutation problem of frequency-domain blind source separation,"  {\em IEEE Trans. SAP}, vol. 12, no. 5, pp. 530--538, Sep. 2004.
+  
+  \bibitem{IVA1}
+  T.~Kim, H.~T.~Attias, S.-Y.~Lee, and T.-W.~Lee, ``Blind source separation exploiting higher-order frequency dependencies," {\em  IEEE Trans. ASLP}, vol. 15, no. 1, pp. 70--79, 2007.
+  
+  \bibitem{IVA2}
+  N.~Ono, ``Stable and fast update rules for independent vector analysis based on auxiliary function technique," {\em  Proc. WASPAA}, pp. 189--192, 2011.
+  
+  \bibitem{NMF}
+  D.~D.~Lee and H.~S.~Seung, ``Learning the parts of objects by non-negative matrix factorization," {\em Nature}, vol. 401, pp. 788--791, 1999.
+  
+  \bibitem{ILRMA1}
+  D.~Kitamura, N.~Ono, H.~Sawada, H.~Kameoka, and H.~Saruwatari, ``Determined blind source separation unifying independent vector analysis and nonnegative matrix factorization,"  {\em IEEE/ACM Trans. ASLP}, vol. 24, no. 9, pp. 1626--1641, 2016.
+  
+  \bibitem{ILRMA2}
+  D.~Kitamura, N.~Ono, H.~Sawada, H.~Kameoka, and H.~Saruwatari, ``Determined blind source separation with independent low-rank matrix analysis," in  {\em Audio Source Separation}, S. Makino, Ed., pp. 125--155. Springer, Cham, 2018.
+  
+  \bibitem{IDLMA}
+  N.~Makishima , S.~Mogami , N.~Takamune, D.~Kitamura, H.~Sumino, S.~Takamichi, H.~Saruwatari, and N.~Ono, ``Independent deeply learned matrix analysis for determined audio source separation,"  {\em IEEE/ACM Trans. ASLP}, vol. 27, no. 10, pp. 1601--1615, 2019.
+  
+  \bibitem{EU}
+  D.~Kitamura, N.~Ono, and H.~Saruwatari, ``Experimental analysis of optimal window length for independent low-rank matrix analysis,"  {\em Proc. EUSIPCO}, pp.~1210--1214, 2017.
+  
+  %\bibitem{preASJ}
+  %  山地修平, 北村大地,
+  %  ``局所時間周波数構造に基づく深層パーミュテーション解決法,''
+  %  {\em 日本音響学会2020年春季研究発表会講演論文集}, pp.~317--320, 2020.
+  
+  \bibitem{Matsuoka2001_PB}
+  K.~Matsuoka and S.~Nakashima, ``Minimal distortion principle for blind source separation,'' {\em Proc. ICA}, pp. 722--727, 2001.
+  
+  \bibitem{brock_p}
+  Y.~Liang, S.M.~Naqvi, and J.~Chambers, ``Overcoming block permutation
+  problem in frequency domain blind source separation when using
+  AuxIVA algorithm,'' {\em Electron. Lett}, pp.460-–462, 2012.
+  %Y.~Mitsui, D.~Kitamura, N.~Takamune, H.~Saruwatari,
+  %Y.~Takahashi, and K.~Kondo, ``Independent low-rank matrix analysis based on %parametric majorizaion-equalization
+  %algorithm,'' {\em Proc. CAMSAP}, pp.98–102, 2007.
+  
+  \bibitem{BSSEval}
+  E.~Vincent, R.~Gribonval, and C.~F, ``Performance measurement in blind audio source separation," {\em IEEE Trans. ASLP}, vol.~14, no.~4, pp.~1462--1469, 2006.
+  
+  \bibitem{relu}
+  V.~Nair, and G.~E.~Hinton, ``Rectified linear units improve restricted boltzmann machines,'' 
+  {\em Proc. ICML}, 2010.
+  
+  \bibitem{JVS}
+  S.~Takamichi, K.~Mitsui, Y.~Saito, T.~Koriyama, N.~Tanji, and H.~Saruwatari, ``JVS corpus: free Japanese multi-speaker voice corpus,"  {\em arXiv preprint}, 1908.06248, 2019.
+  
+  \bibitem{RWCP}
+  S.~Nakamura, K.~Hiyane, F.~Asano, T.~Nishiura, and T.~Yamada, ``Acoustical sound database in real environments for sound scene understanding and hands-free speech recognition,"  {\em Proc. LREC}, pp. 965--968, 2000.
+  
+  \bibitem{adam}
+  D.~P.~kingma, and J.~Ba, ``Adam: A method for stochastic optimization,''
+  {\em arXiv preprint arXiv}, pp. 1412--6980, 2014.
+  
+  \bibitem{Sisec}
+  S. ~Araki, F. ~Nesta, E. ~Vincent, Z. ~Koldovsky, G. ~Nolte, A. ~Ziehe and A. ~Benichoux, ``The 2011 signal separation evaluation campaign (SiSEC2011): -Audio source separation," {\em Proc. LVA/ICA}, pp. 414--422, 2012.
+  
+  %\bibitem{DuongMethod}
+  %N.~Q.~K.~Duong, E.~Vincent, and R.~Gribonval, ``Under-determined reverberant audio %source separation using a full-rank spatial covariance model," {\em IEEE Trans. %ASLP}, vol.~18, no.~7, pp.~1830--1840, 2010.
+  
 \end{thebibliography}
+
 
 %%%%% 参考文献（BibTeXを使う場合） %%%%%
 % \addcontentsline{toc}{chapter}{\bibname} % 参考文献を目次に表示
