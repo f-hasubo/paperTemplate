@@ -1,25 +1,30 @@
-\chapter{従来手法}
+\chapter{\red{基礎理論と}従来手法}
 \label{chap:conv}
 
 %----------------------------------------------
 \section{まえがき}
 %----------------------------------------------
-まず，\ref{sec:ica}節では，提案手法において必要な基礎理論を説明するため，音源分離手法のICAについて説明する．
+\red{本章では，音源分離技術において必要となる手法の基礎理論とこれまでに提案されてきた音源分離手法について述べる．}まず，\ref{sec:ica}節では，提案手法の基礎理論となる音源分離手法のICAについて説明する．
 \ref{sec:stft}節では，音響信号処理でよく用いられる，短時間フーリエ変換（short-time Fourier transform: STFT）について説明する．
-\ref{sec:formularization}節では，時間周波数領域における音源信号及びBSSの定式化を導入する．
-\ref{sec:fdica}節では，音源分離手法の1つであるFDICAについて説明する．
-\ref{sec:pp}節では，パーミュテーション問題と呼ばれるFDICAに伴う課題の説明と，既存のパーミュテーション解決法について説明する．
+\ref{sec:formularization}節では，時間周波数領域における音源信号及びBSSの定式化を導入し，\red{\ref{sec:fdica}節以降は，定式化したものを用いて説明する．}
+\ref{sec:fdica}節では，\red{時間周波数領域で周波数毎にICAを適用する}FDICAについて説明する．
+\ref{sec:pp}節では，\red{本提案手法の解決すべき課題である}パーミュテーション問題と呼ばれるFDICAに伴う問題の説明と，既存のパーミュテーション解決法について説明する．
 \ref{sec:ivailrma}節では，パーミュテーション問題を回避するような音源分離手法であるIVA及びILRMAについて詳細を述べる．
-\ref{sec:DNNs}節では，既存の深層学習を用いたパーミュテーション解決法について説明する．
+\ref{sec:DNNs}節では，\red{本提案手法と既存のDNNに基づく手法の違いを理解するために，}既存のDNNを用いたパーミュテーション解決法について説明する．
+\red{\ref{sec:conclu}節では，本章のまとめを述べる．}
 
 %----------------------------------------------
 \section{ICAの基本原理}
 \label{sec:ica}
 %----------------------------------------------
 %----------------------------------------------
+
+\red{本章では，BSSの基礎であるICA~\cite{ICA}について説明する．
+なお，本章の説明では簡単のために，音源数及びマイクロホン数がいずれも2の場合を例として説明するが，本章記載の基本原理は音源数及びマイクロホン数がいずれも3以上の場合についても，一般性を失うことなく同様に説明できる．
+但し，後述の通り，音源数とマイクロホン数は常に等しいという仮定が必要である．BSSの文脈では，このような「音源数がマイクロホン数以下」という条件を優決定条件と呼ぶ）．}
 \subsection{信号源の混合モデルと分離方法}
 %----------------------------------------------
-本項では，BSSの基礎であるICAについて説明する．
+\blue{本項では，BSSの基礎であるICAについて説明する．}
 今，2つの信号源$s_1(l)$及び$s_2(l)$があり，その混合信号を2つのマイクロホンで観測するという状況を考える．
 ここで，$l = 1, 2, \cdots , L$は離散時間インデクスを示す．
 マイクロホンで観測された信号を
@@ -30,30 +35,30 @@ $x_1(l)$及び$x_2(l)$とすると，2つの信号源の混合現象は次の連
     x_2(l) = a_{21}s_1(l) + a_{22}s_2(l)  \label{f:a2}
   \end{cases}
 \end{eqnarray}
-ここで，信号の伝搬を表す係数$a_{mn}$は，時刻$t$には依存せず常に一定であると仮定する．
+ここで，信号の伝搬を表す係数$a_{mn}$は，時刻\blue{$t$}\red{$l$}には依存せず常に一定であると仮定する．
 即ち，信号源の位置及びマイクロホンの位置が動かないことを仮定している．
 また，$n = 1, 2, \cdots , N$，及び$m =
-1, 2, \cdots , M $はそれぞ音源及びチャネルのインデクスを示す．
+1, 2, \cdots , M $はそれぞ\red{れ}音源及びチャネルのインデクスを示す．
 伝搬係数$a_{mn}$をまとめた行列を以下のように定義する．
 \begin{align}
-    \bm{A} = \begin{pmatrix}
+    \bm{A} = \red{\begin{bmatrix}
     a_{11}  & a_{12}  \\
     a_{21}  & a_{22}  \\
-    \end{pmatrix}
+    \end{bmatrix}}
 \end{align}
 この行列$\bm{A}$は混合行列と呼ばれる．
-観測信号ベクトル$\bm{x}(l) = (x_1(l),x_2(l))^T$
-信号源ベクトル$\bm{s}(l) = (s_1(l),s_2(l))^T$
+観測信号ベクトル$\bm{x}(l) = \cancel{(x_1(l),x_2(l))^T} \red{[x_1(l),x_2(l)]^\mathrm{T}}$
+信号源ベクトル$\bm{s}(l) = \cancel{(s_1(l),s_2(l))^T} \red{[s_1(l),s_2(l)]^\mathrm{T}}$
 及び混合行列$\bm{A}$を用いて，式(\ref{f:a1})及び(\ref{f:a2})の連立方程式は次式のように書き直せる．
 \begin{align}
     \bm{x}(l) = \bm{A}\bm{s}(l)　\label{f:x}
 \end{align}
 ここで，$\cdot^\mathrm{T}$ はベクトルや行列の転置を表す．
-分離信号を$y(l) = (y_1(l),y_2(l))^T$，分離行列を$\bm{W}$とそれぞれ定義すると，音源分離は以下のように表される．
+分離信号を$\bm{y}(l) = \cancel{(y_1(l),y_2(l))^T} \red{[y_1(l),y_2(l)]^\mathrm{T}}$，分離行列を$\bm{W}$とそれぞれ定義すると，音源分離は以下のように表される．
 \begin{align}
     \bm{y}(l) = \bm{W}\bm{x}(l)
 \end{align}
-このとき，混合行列$\bm{A}$の逆行列が存在する（$\bm{A}$が正則）ならば，$\bm{W}=\bm{A}^{-1}$となるように$\bm{W}$を選択することで，信号源$s(l)$を推定することができる．
+このとき，混合行列$\bm{A}$の逆行列が存在する（$\bm{A}$が正則）ならば，$\bm{W}=\bm{A}^{-1}$となるように$\bm{W}$を\blue{選択}\red{推定}することで，信号源$\bm{s}(l)$を推定することができる．
 \begin{align}
     \bm{y}(l) &= \bm{W}\bm{x}(l)\\
     &= \bm{A}^{-1}\bm{x}(l)\\
@@ -61,40 +66,40 @@ $x_1(l)$及び$x_2(l)$とすると，2つの信号源の混合現象は次の連
     &= \bm{s}(l)
 \end{align}
 
-このように，混合行列$\bm{A}$の逆行列を推定することで，音源分離を達成することができる．
+このように，混合行列$\bm{A}$の逆行列\red{である分離行列$\bm{W}$}を推定することで，音源分離を達成することができる．
 しかしながら，音源やマイクロホンの位置関係が未知であるBSSにおいては，混合行列$\bm{A}$もまた未知である．
-そこで，ICAでは，信号源の混合モデル式(\ref{f:x})の仮定の他に，信号そのものの統計的なモデル（$p(s_1)$ 及び$p(s_2)$に対する仮定）を導入することで，分離フィルタ$\bm{W}$を推定する．
+そこで，ICAでは，信号源の混合モデル式(\ref{f:x})の仮定の他に，信号そのものの統計的なモデル（$p(s_1)$ 及び$p(s_2)$に対する仮定）を導入することで，分離\blue{フィルタ}\red{行列}$\bm{W}$を推定する．
 
 %--------------------------------------------
 \subsection{統計的独立性}
 %----------------------------------------------
 ICA による信号源分離を理解する上での重要な概念として，統計的独立性がある．
 今，信号源$s_1(l)$及び$s_2(l)$を確率変数として扱い，それらの生成モデルを$p(s_1)$及び$p(s_2)$と定義する．
-通常，各信号源（$s_1(l)$及び$s_2(l)$）は互いに無関係であり，$s_1(l)$から$s_2(l)$を推定することはできないはずである．
+通常，各信号源（$s_1(l)$及び$s_2(l)$）は互いに無関係であり，\red{例えば}$s_1(l)$から$s_2(l)$を\blue{推定}\red{予測や説明}することはできないはずである．
 そのため，$s_1(l)$と$s_2(l)$は互いに統計的に独立とみなすことができ，次式が成立する．
 \begin{align}
-    p(s_1,s_2) = p(s_1)p(s_2) \label{f:y}
+    p(s_1,s_2) = p(s_1)p(s_2) \label{f:s}
 \end{align}
 同様に,理想的な分離フィルタが推定できれば，分離信号$y_n(l)$も統計的に独立であるため，次式が成立する．
 \begin{align}
-    p(y_1,y_2) = p(y_1)p(y_2)
+    p(y_1,y_2) = p(y_1)p(y_2) \label{f:y}
 \end{align}
 ここで，$p(y_1)$及び$p(y_2)$はそれぞれ分離信号$y_1(l)$及び$y_2(l) $の生成モデルであり，$p(y_1, y_2)$は同
 時分布である．
-従ってICAによるBSSは，式(\ref{f:y})が成立するような分離フィルタ$\bm{W}$を推定する問題であると解釈できる．
+従ってICAによるBSSは，式(\blue{\ref{f:s}} \red{\ref{f:y}})が成立するような分離フィルタ$\bm{W}$を推定する問題であると解釈できる．
 上記の問題を定式化すると，次式のように書き表せる．
 \begin{align}
-   \argmin_{\bm{W}} \mathfrak{I}(\bm{W})
+   \argmin_{\bm{W}}~ \mathfrak{I}(\bm{W})
 \end{align}
 \begin{align}
- \mathfrak{I}(\bm{W}) = \mathfrak{D}_{KL}[p(y_1,y_2)||p(y_1)p(y_2)] \label{f:cost}
+ \mathfrak{I}(\bm{W}) = \mathfrak{D}_{\cancel{KL} \red{\mathrm{KL}}}[p(y_1,y_2)||p(y_1)p(y_2)] \label{f:cost}
 \end{align}
-ここで，$\mathfrak{D}_{KL}[p(s)||q(s)]$はカルバックライブラ・ダイバージェンス（Kullback--Leibler divergence: KL divergence）と呼ばれ，2つの分布間（$p(s)$及び$q(s)$）の距離を測る関数として次式のように定義される．
+ここで，$\mathfrak{D}_{\cancel{KL} \red{\mathrm{KL}}}[p(s)||q(s)]$はカルバックライブラ・ダイバージェンス（Kullback--Leibler divergence: KL divergence）と呼ばれ，2つの分布間（$p(s)$及び$q(s)$）の距離を測る関数として次式のように定義される．
 \begin{align}
-\mathfrak{D}_{KL}[p(s)||q(s)] = \int{p(s){\rm log}~\frac{p(s)}{q(s)}}ds　\label{f:kld}
+\mathfrak{D}_{\cancel{KL} \red{\mathrm{KL}}}[p(s)||q(s)] = \int{p(s){\rm log}~\frac{p(s)}{q(s)}}ds　\label{f:kld}
 \end{align}
-また，分離フィルタ$\bm{W}$で線形変換する前（$\bm{x}$）と後（$\bm{y}$）の確率変数を考えたとき，それぞれ
-の同時分布$p(\bm{y}) = p(y1,y2) $と$p(\bm{x}) = p(x1,x2)$の間には，次式が成立する．
+また，分離\blue{フィルタ}\red{行列}$\bm{W}$で\red{観測信号を}線形変換する前（$\bm{x}$）と後（$\bm{y}$）の確率変数を考えたとき，それぞれ
+の同時分布$p(\bm{y}) = p(\cancel{y1,y2} \red{y_1,y_2}) $と$p(\bm{x}) = p(\cancel{x1,x2} \red{x_1,x_2})$の間には，次式が成立する．
 \begin{align}
     p(\bm{y}) = \frac{1}{|\mathrm{det}~\bm{W}|}p(\bm{x}) \label{f:detw}
 \end{align}
@@ -105,7 +110,10 @@ ICA による信号源分離を理解する上での重要な概念として，�
   &\quad -\int_{-\infty}^{\infty} p(y_1){\rm log}~p(y_1)dy_1 - \int_{-\infty}^{\infty} p(y_2){\rm log}~p(y_2)dy_2    \label{f:newcost}
 \end{split}
 \end{align}
-ICAでは式(\ref{f:newcost})を$\bm{W}$について最小化することで，信号源を分離する．
+ICAでは，式(\ref{f:newcost})\red{が最小化される分離行列$\bm{W}$を求めることで}\blue{を$\bm{W}$について最小化することで}，信号源を分離する．
+
+
+\subsection{aaa}
 
 %----------------------------------------------
 \section{STFT}
@@ -114,62 +122,70 @@ ICAでは式(\ref{f:newcost})を$\bm{W}$について最小化することで，�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
     \begin{center}
-        \includegraphics[width=0.95\columnwidth]{figures/stft.eps}
+        \includegraphics[width=0.95\columnwidth]{figures/stft.pdf}
     \end{center}
     \vspace{-8pt}
-	\caption{Mechanism of STFT.}
+	\caption{Mechanism of STFT. Each of windowed short-time signals are transformed to frequency domain by discrete Fourier transform.}
 	\label{fig:stft}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-STFTはFig.~\ref{fig:stft}に示すような時
-間的に変化するスペクトルを表現するための手法である．
-STFT の分析窓関数の長さ及びシフト長をそれぞれ$Q$及び$\tau$としたとき，時間領域の信号
-$z(l)$の$j$番目の短時間区間（時間フレーム）の信号は次式で表される．
+STFTはFig.~\ref{fig:stft}に示すような時間的に変化するスペクトルを表現するための手法である．
+\red{いま，音響信号の時間波形を次式で定義する．
 \begin{align}
-    \bm{z}^{(j)} &= \left[z\left((j-1)\tau+1\right), z\left((j-1)\tau+2\right), \cdots , z\left((j-1)\tau+Q\right) \right]^{T}\\
+  \mathbf{x} = [\mathrm{x}(1), \mathrm{x}(2), \dots, \mathrm{x}(l), \dots, \mathrm{x}(L)]^\mathrm{T} \in \mathbb{R}^L
+\end{align}
+}
+STFT の分析窓関数の長さ及びシフト長をそれぞれ$Q$及び$\tau$としたとき，時間領域の信号
+$\cancel{z(l)} \red{\mathbf{x}}$の$j$番目の短時間区間（時間フレーム）の信号は次式で表される．
+\begin{align}
+    \bm{\cancel{z} \red{\mathbf{x}}}^{(j)} &= \left[\cancel{z} \red{\mathrm{x}}\left((j-1)\tau+1\right), \cancel{z} \red{\mathrm{x}}\left((j-1)\tau+2\right), \cdots , \cancel{z} \red{\mathrm{x}}\left((j-1)\tau+Q\right) \right]^{\cancel{T} \red{\mathrm{T}}}\\
     &= \left[
-    z^{(j)}(1),z^{(j)}(2),\cdots , z^{(j)}(q), \cdots , z^{(j)}(Q)
-    \right]^{T}~\in \mathbb{R}^{Q}
+    \cancel{z} \red{\mathrm{x}}^{(j)}(1),\cancel{z} \red{\mathrm{x}}^{(j)}(2),\cdots , \cancel{z} \red{\mathrm{x}}^{(j)}(q), \cdots , \cancel{z} \red{\mathrm{x}}^{(j)}(Q)
+    \right]^{\cancel{T} \red{\mathrm{T}}}~\in \mathbb{R}^{Q}
 \end{align}
 ここで，$j= 1, 2, \cdots , J$及び$q= 1, 2, \cdots , Q$は，それぞれ時間フレーム及び時間フレーム内のサン
 プルを示す．また，セグメント数$J$は次式によって与えられる．
 \begin{align}
     J = \frac{L}{\tau}
 \end{align}
-また，各時間フレームの信号のSTFTは次式のようにして求められる．
+\blue{また，各時間フレームの信号のSTFTは次式のようにして求められる．}
+\red{ただし，時間領域の信号$\mathbf{x}$は式(2.18)が自然数となるように，信号の末尾に必要な分だけ零値が追加されているものとする．このとき，信号$\mathbf{x}$のSTFTを次式で表す．}
 \begin{align}
-\bm{Z}= {\rm STFT}_{\bm{\omega}}(\bm{z})~\in \mathbb{C}^{I \times J}
+\cancel{\bm{Z}} \red{\mathbf{X}}= {\rm STFT}_{\bm{\omega}}(\cancel{\bm{z}} \red{\mathbf{x}})~\in \mathbb{C}^{I \times J}
 \end{align}
-また，スペクトログラム$\bm{Z}$の$(i, j)$ 番目の要素は次式で表される．
+\blue{スペクトログラム$\bm{Z}$の}\red{ここで，$\mathbf{X}$は（複素）スペクトログラムと呼ばれ，Fig.~\ref{fig:stft}に示すように時間と周波数の2次元の行列である．スペクトログラム$\mathbf{X}$の}$(i, j)$ 番目の要素は次式で表される．
 \begin{align}
-    z_{ij}= \sum_{q=1}^{Q}\omega(q)z^{(j)}(q){\rm exp}\left\{\frac{-\iota2\pi(q-1)(i-1)}{F}\right\}
+    \cancel{z} \red{\mathrm{x}}_{ij}= \sum_{q=1}^{Q}\omega(q) \cancel{z}\red{\mathrm{x}}^{(j)}(q){\rm exp}\left\{\frac{-\iota2\pi(q-1)(i-1)}{F}\right\}
 \end{align}
-ここで$F$は$\lfloor \frac{F}{2}\rfloor+1 =I$を満たす整数（$\lfloor \cdot \rfloor$は床関数）を，$i= 1, 2, \cdots , I$は周波数ビンのインデクスを，
-$\iota$は虚数単位を，$\bm{\omega}$は分析窓関数を示している．
-このように，時間領域の信号は一定幅の短時間ごとに分析窓関数を乗じて離散フーリエ変換を行うことで，横軸が時間，縦軸が周波数のスペクトログラムと呼ばれる複素行列$\bm{Z}$で表すことができる．
+ここで$F$は$\lfloor \frac{F}{2}\rfloor+1 =I$を満たす整数（$\lfloor \cdot \rfloor$は床関数）\blue{を}，$i= 1, 2, \cdots , I$は周波数ビンのインデクス\blue{を}，
+$\iota$は虚数単位\blue{を}，\cancel{$\bm{\omega}$}\red{$\bm{\omega} = [ \omega(1), \omega(2), \dots, \omega(Q) ]^\mathrm{T} \in \mathbb{R}^{Q}$}は\blue{分析窓関数}\red{短時間信号$\mathbf{x}^{(j)}$の両端の不連続性を解消するための解析窓関数}を\red{それぞれ}示している．
+このように\red{STFTは，}時間領域の信号は一定幅\blue{短時間ごとに分析窓関数を乗じて離散フーリエ変換を行うことで，}\red{短時間信号に分割して解析窓関数を乗じて離散フーリエ変換を適用し，}\blue{横軸が時間，縦軸が周波数の}スペクトログラムと呼ばれる\blue{複素行列}\red{複素時間周波数行列}\cancel{$\bm{Z}$}\blue{で表すことができる．}\red{に変換する処理である．音源分離等の多くの音響信号処理では，このスペクトログラムを信号処理の対象とする．}
+
 
 %----------------------------------------------
 \section{周波数領域におけるBSSの定式化}
 \label{sec:formularization}
 %----------------------------------------------
-今一度，音源数と観測チャネル数（マイクロホン数）をそれぞれ$N$及び$M$とする．
-また，各観測音源信号をSTFTすることで得られる，各時間周波数における音声信号，混合信号，及び分離信号をそれぞれ
+\blue{今一度}\red{本節以降}，音源数と観測チャネル数（マイクロホン数）をそれぞれ$N$及び$M$とする．
+また，\blue{各観測音源信号をSTFTすることで得られる，各時間周波数における音声信号，} \blue{混合信号，及び分離信号をそれぞれ} \red{音源信号，観測信号，及び分離信号の時間周波数毎の成分をそれぞれ次式で表す．}
 \begin{align}
   \bm{s}_{ij} &= \left[
-	s_{ij,1},s_{ij,2}, \cdots, s_{ij,n}, \cdots, s_{ij,N} 
-  \right]^\mathrm{T}~\in \mathbb{C}^{N}\\
+	s_{ij\cancel{,1}\red{1}},s_{ij\cancel{,2}\red{2}}, \cdots, s_{ij\cancel{,n}\red{n}}, \cdots, s_{ij\cancel{,N}\red{N}} 
+  \right]^\mathrm{T}~\in \mathbb{C}^{N} \label{f:BSS_s}\\
   \bm{x}_{ij} &= \left[
-      x_{ij,1},x_{ij,2},  \cdots, x_{ij,m}, \cdots  , x_{ij,M} 
-  \right]^\mathrm{T}~\in \mathbb{C}^{M} \\
+      x_{ij\cancel{,1}\red{1}},x_{ij\cancel{,2}\red{2}},  \cdots, x_{ij\cancel{,m}\red{m}}, \cdots  , x_{ij\cancel{,M}\red{M}} 
+  \right]^\mathrm{T}~\in \mathbb{C}^{M}  \label{f:BSS_x}\\
   \bm{z}_{ij} &= \left[
-      z_{ij,1},z_{ij,2},  \cdots, z_{ij,n}, \cdots  , z_{ij,N} 
-  \right]^\mathrm{T}~\in \mathbb{C}^{N}
+      z_{ij\cancel{,1}\red{1}},z_{ij\cancel{,2}\red{2}},  \cdots, z_{ij\cancel{,n}\red{n}}, \cdots  , z_{ij\cancel{,N}\red{N}} 
+  \right]^\mathrm{T}~\in \mathbb{C}^{N} \label{f:BSS_z}
 \end{align}
-と表す．
-ここで，$i= 1, 2, \cdots , I$，$j = 1, 2, \cdots , J$，$n = 1, 2, \cdots , N$，及び$m =
-1, 2, \cdots , M $はそれぞれ周波数，時間，音源，チャネルのインデクスを示す．
-また，複素スペクトログラム行列$\bm{S}_{n} \in \mathbb{C}^{I\times J}$, $\bm{X}_{m} \in \mathbb{C}^{I\times J}$及び$\bm{Z}_{n} \in \mathbb{C}^{I\times J}$の成分をそれぞれ
-$s_{i, j, n}$, $x_{i, j, m}$及び$z_{i, j, n}$ と表す．
+
+\blue{と表す．}
+
+\blue{また，複素スペクトログラム行列 \cancel{$\bm{S}_{n} \in \mathbb{C}^{I\times J}$, $\bm{X}_{m} \in \mathbb{C}^{I\times J}$}} \cancel{$\bm{Z}_{n} \in \mathbb{C}^{I\times J}$} \blue{の成分をそれぞれ
+} \cancel{$s_{i, j, n}$, $x_{i, j, m}$} \blue{及び\cancel{$z_{i, j, n}$} と表す．}
+\red{式(\ref{f:BSS_s})--(\ref{f:BSS_z})はいずれも複数音源又は複数チャネルをまとめたベクトルであるが，音源又はチャネルではなく時間周波数でまとめた行列も定義しておく．即ち，$n$番目の音源信号のスペクトログラム，
+$m$番目の観測信号のスペクトログラム，及び$n$番目の分離信号のスペクトログラムをそれぞれ$\bm{S}_n\in\mathbb{C}^{I\times J}$，$\bm{X}_m\in\mathbb{C}^{I\times J}$，及び$\bm{Z}_n\in\mathbb{C}^{I\times J}$と定義する．これらの行列の$(i,j)$番目の要素はそれぞれ$s_{ijn}$，$x_{ijm}$，及び$z_{ijn}$に一致する．}
 
 %----------------------------------------------
 \section{FDICA}
@@ -309,6 +325,7 @@ Fig.~\ref{fig:bp}では，$4000$hz以上の周波数帯がまとめて反転し�
 
 %----------------------------------------------
 \section{本章のまとめ}
+\label{sec:conclu}
 %----------------------------------------------
 本章では，提案手法において必要となる基礎理論及び各種従来手法について説明した．
 次章以降では，より簡潔に精度の良いBSSを達成するために\ref{sec:fdica}節で導入したFDICAのポスト処理として，DNNに基づくパーミュテーション解決法を新たに提案する．
