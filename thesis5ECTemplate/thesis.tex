@@ -16,12 +16,18 @@
 %\documentclass[senkouka]{nitkagawathesis}%特論（専攻科2年）日本語用
 %\documentclass[senkouka,english]{nitkagawathesis}%特論（専攻科2年）英語用
 \usepackage{ulem}
+\usepackage{subcaption}
 \usepackage{cancel}
+\usepackage{udline}
+
+% \newcommand{\delete}[1]{\textcolor{blue}{\Sl{#1}}}
 \renewcommand{\CancelColor}{\color{blue}}
+\newcommand{\Add}[1]{\textcolor{red}{#1}}
+\newcommand{\Erase}[1]{\textcolor{red}{\sout{\textcolor{black}{#1}}}}
 \renewcommand{\figurename}{Fig. }
 \renewcommand{\tablename}{Table }
 \newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\blue}[1]{\sout{\textcolor{blue}{#1}}}
+\newcommand{\blue}[1]{\textcolor{blue}{\Sl{#1}}}
 %%%%% タイトル %%%%%
 \title{\underline{深層学習に基づく多チャネル音源分離のための}\\\underline{パーミュテーション解決の基礎的実験}}
 %\titlewidth{}% タイトル幅 (指定するときは単位つきで)
@@ -61,12 +67,13 @@
 %%%%% Abstract %%%%%
 \eabstract{ % これ単体で複数ページにまたがる場合はエラーが出るので注意，アブスト内で改段落は禁止
   In this thesis, we deal with audio source separation, which is a technique to separate audio sources from an
-  observed signal. This technology is useful in situations where multiple speech needs to be separated into the
-  individual speech sources. It can also be used to separate a target speech signal and the background noise.
+  observed signal. This technology can be used to separate speech from multiple people speaking at the same time, 
+  to separate speech from background noise, or to separate musical instruments in a music signal.
   One of the popular source separation methods is frequency-domain independent conponent analysis (FDICA). In FDICA,
   the separation is performed with applying independent component analysis to each frequency. However, 
   the order of the estimated signal in each frequency is not aligned among all frequencies, resulting in the so-called
-  permutation problem. In recent years, deep neural networks (DNNs) have been proposed to solve the permutation problem, but the problem is that source separation of more than three sources is not realistic from the viewpoint of computational complexity.
+  permutation problem. In recent years, deep neural networks (DNN) have been proposed to solve the permutation problem, 
+  but the problem is that source separation of more than three sources is not realistic from the viewpoint of computational complexity and Algorithmic Complexity.
   In this paper, we propose a new algorithm for the DNN-based permutation problem and the block-wise permutation problem.
   The proposed DNN learns the characteristics of the complex time-frequency structure of the separated signals in advance and predicts whether the permutation mismatch occurs or not for 
   all frequency bins. The performance of the proposed method in solving the permutation problem is evaluated by the percentage of correct answers in all frequency bins.
@@ -76,17 +83,17 @@
 
 %%%%% 概要 %%%%%
 \abstract{ % これ単体で複数ページにまたがる場合はエラーが出るので注意，アブスト内で改段落は禁止
- 音源分離とは，複数の未知の音源が混ざった観測信号から，混ざる前の個々の音源を推定する技術である．この技術は，複数人が同時に発話した内容をそれぞれの音声に分けたい場合や，背景雑音と音声を分離したいとき，さらには音楽信号における楽器音ごとの分離などに利用される．
+ 音源分離とは，複数の未知の音源が混ざった観測信号から，混ざる前の個々の音源を推定する技術である．この技術は，複数人が同時に発話した内容をそれぞれの音声に分けたい場合や，背景雑音と音声を分離したいとき，\red{さらには音楽信号における楽器音ごとの分離などに}利用される．
  代表的な音源分離手法の1つとして時間周波数領域独立成分分析（frequency-domain independent conponent analysis: FDICA）がある．これは，周波数毎に独立成分分析を適用することで分離を行う．
  しかしFDICA にはパーミュテーション問題と呼ばれる分離信号の並び替え問題が付随するため，ポスト処理としてパーミュテーション解決が必要となる．近年では，
- 深層ニューラルネットワーク（deep neural networks: DNN）を用いたパーミュテーション問題の解決法が提案されたが，3音源以上の音源分離は計算量の観点及びアルゴリズムの複雑性から現実的ではないことが課題として挙げられる．
- 本論文では，パーミュテーション問題，またブロック単位でのパーミュテーション問題に対して，DNNに基づく新しいアプローチを提案し，パーミュテーション問題に対するDNNに基づく解法の妥当性について実験的に調査する．
- 提案手法のDNNは，分離信号の複雑な時間周波数構造の特徴を事前に学習し，全周波数についてパーミュテーション不整合が生じているか否かを予測する．
+ 深層ニューラルネットワーク（deep neural networks: \blue{DNNs}\red{DNN}）を用いたパーミュテーション問題の解決法が提案され\blue{てき}たが，3音源以上の音源分離は計算量の観点\red{及びアルゴリズムの複雑性}から現実的ではないことが課題として挙げられる．
+ 本論文では，パーミュテーション問題，またブロック単位でのパーミュテーション問題に対して，\blue{新たなアルゴリズムを提案する}\red{DNNに基づく新しいアプローチを提案し，パーミュテーション問題に対するDNNに基づく解法の妥当性について実験的に調査する}．
+ 提案手法のDNNは，分離信号の複雑な時間周波数構造の特徴を事前に学習し，全周波数\blue{ビン}についてパーミュテーション不整合が生じているか否かを予測する．
  提案手法のパーミュテーション問題の解決性能は，全周波数の正答率で評価する．実験結果から，提案するDNNパーミュテーション解決法は人工的に作成した擬似的なブロック単位でのパーミュテーション問題に対して，100\%に近い正答率を示した．
  また，実際の音声データに対してもブロック単位でのパーミュテーション問題として実験を行うと，80\%を超える正答率を示した．
 }
 
-\keywords{frequency-domain independent conponent analysis, permutation solver, deep neural networks}
+\keywords{\blue{FDICA}\red{frequency-domain independent conponent analysis}, permutation solver, deep neural networks}
 
 \makeseparatedabstract % 英語アブストと日本語アブストをそれぞれ独立したページとする
 %\makeabstract % 英語アブストと日本語アブスト合わせて1枚に収まる場合はこちらを使ってもよい，ただし2枚になる場合はエラーが出る
@@ -146,6 +153,9 @@
   \bibitem{COR}
   N.~Murata, S.~Ikeda, and A.~Ziehe, ``An approach to blind source separation based on temporal structure of speech signals,"  {\em Neurocomputing}, vol. 41, no. 1–4, pp. 1--24, 2001.
   
+  \bibitem{Permutation_solverBSS}
+  \red{H. Sawada, S. Araki, and S. Makino, ``Measuring dependence of bin-wise separated signals for permutation alignment in frequency-domain BSS,'' Proc. ISCAS, pp. 3247--3250, 2007.}
+  
   \bibitem{DOA}
   H.~Saruwatari, T.~Kawamura, T.~Nishikawa, A.~Lee, and K.~Shikano, ``Blind source separation based on a fast-convergence algorithm combining ICA and beamforming,"  {\em IEEE Trans. ASLP}, vol. 14, no. 2, pp. 666--678, 2006.
   
@@ -167,11 +177,11 @@
   \bibitem{ILRMA2}
   D.~Kitamura, N.~Ono, H.~Sawada, H.~Kameoka, and H.~Saruwatari, ``Determined blind source separation with independent low-rank matrix analysis," in  {\em Audio Source Separation}, S. Makino, Ed., pp. 125--155. Springer, Cham, 2018.
   
-  \bibitem{DNN_soluver}
-  S.~Yamaji and D.~Kitamura, ``DNN-based permutation solver for frequency-domain independent component analysis in two-source mixture case," {\em  Proc. APSIPA}, pp. 781–787, 2020.
-  
   \bibitem{EU}
   D.~Kitamura, N.~Ono, and H.~Saruwatari, ``Experimental analysis of optimal window length for independent low-rank matrix analysis,"  {\em Proc. EUSIPCO}, pp.~1210--1214, 2017.
+
+  \bibitem{DNN_soluver}
+  S.~Yamaji and D.~Kitamura, ``DNN-based permutation solver for frequency-domain independent component analysis in two-source mixture case," {\em  Proc. APSIPA}, pp. 781–787, 2020.
   
   %\bibitem{preASJ}
   %  山地修平, 北村大地,
@@ -184,11 +194,20 @@
   \bibitem{brock_p}
   Y.~Liang, S.M.~Naqvi, and J.~Chambers, ``Overcoming block permutation
   problem in frequency domain blind source separation when using
-  AuxIVA algorithm,'' {\em Electron. Lett}, pp.460-–462, 2012.
+  AuxIVA algorithm,'' {\em Electron. Lett}, pp.460--462, 2012.
+
+  \bibitem{User_anotation}
+  \red{F. Oshima, M. Nakano, and D. Kitamura, ``Interactive speech source separation based on independent low-rank matrix analysis,'' {\em Acoustical Science and Technology}, vol. 42, no. 4, pp. 222--225, 2021.}
   %Y.~Mitsui, D.~Kitamura, N.~Takamune, H.~Saruwatari,
   %Y.~Takahashi, and K.~Kondo, ``Independent low-rank matrix analysis based on %parametric majorizaion-equalization
   %algorithm,'' {\em Proc. CAMSAP}, pp.98–102, 2007.
   
+  \bibitem{stiching}
+  \red{T. Neumann, K. Kinoshita, C. Boeddeker, M. Delcroix, and R. Umbach, ``Graph-PIT: Generalized permutation invariant training for continuous separation of arbitrary numbers of speakers,'' {\em INTERSPEECH}, pp. 3490--3494, 2021.}
+
+  \bibitem{PIT}
+  \red{ D. Yu, M. Kolbak, Z.-H. Tan, and J. Jensen, ``Permutation invariant training of deep models for speaker-independent multi-talker speech separation,'' {\em Proc. ICASSP}, pp. 241-245, 2017. }
+
   \bibitem{BSSEval}
   E.~Vincent, R.~Gribonval, and C.~F, ``Performance measurement in blind audio source separation," {\em IEEE Trans. ASLP}, vol.~14, no.~4, pp.~1462--1469, 2006.
   

@@ -33,6 +33,75 @@
 %   \end{tabular}
 %  \end{center}
 % \end{table}
+本実験では，提案するDNNに基づくパーミュテーション解決法において，どの程度各周波数成分の並び替えができるかを実験的に確認した．
+実験には，人工データと実際の音響信号の2つを用いた．
+%----------------------------------------------
+\subsection{人工データを用いた実験の条件}
+\label{sec:ex_condition_matrix}
+%----------------------------------------------
+実験データとして，Fig.~\ref{fig:01mat_spec}-- Fig.~\ref{fig:stripe_spec}に示すように，全ての成分が0と1の行列，25列毎に0と1の値が入れ替わる行列，1列毎に0と1の値が入れ替わる行列の3パターンを使用した．
+用意した3パターンの行列は，全て分離信号$(\bm{Y}_1, \bm{Y}_2)$とみなして実験を行う．この時の行列のサイズは$I=J=100$とした．
+また，ブロックパーミュテーションと呼ばれる，ブロック単位で音源分離に失敗することをふまえ，Fig.~\ref{fig:ex_block}のように2行，4行，8行ごとに各周波数成分をシャッフルした実験も同時に実施した．
+1列毎に0と1の値が入れ替わる行列に対しては，\ref{fig:1_5ratio_perm}のように5\%の割合で2行ごとにシャッフルしそれ以外は1行ごとにシャッフルした場合と，1\%の割合で2行ごとにシャッフルしそれ以外は1行ごとにシャッフルした場合の実験も行った．
+
+\begin{figure}[htbp]
+    \begin{minipage}[b]{0.45\linewidth}
+      \centering
+      \includegraphics[keepaspectratio, width=6.0cm]{figures/origi_spec/0mat.pdf}
+    \end{minipage}
+    \begin{minipage}[b]{0.45\linewidth}
+      \centering
+      \includegraphics[keepaspectratio, width=6.0cm]{figures/origi_spec/1mat.pdf}
+    \end{minipage}
+    \caption{0 and 1 matrices.}
+    \label{fig:01mat_spec}
+\end{figure}
+
+\begin{figure}[htbp]
+    \begin{minipage}[b]{0.45\linewidth}
+      \centering
+      \includegraphics[keepaspectratio, width=6.0cm]{figures/origi_spec/25stripe1.pdf}
+    \end{minipage}
+    \begin{minipage}[b]{0.45\linewidth}
+      \centering
+      \includegraphics[keepaspectratio, width=6.0cm]{figures/origi_spec/25stripe2.pdf}
+    \end{minipage}
+    \caption{Two matrices with 0 and 1 values changing every 25 columns.}
+    \label{fig:25stripe_spec}
+\end{figure}
+
+\begin{figure}[htbp]
+    \begin{minipage}[b]{0.45\linewidth}
+      \centering
+      \includegraphics[keepaspectratio, width=6.0cm]{figures/origi_spec/stripe1.pdf}
+    \end{minipage}
+    \begin{minipage}[b]{0.45\linewidth}
+      \centering
+      \includegraphics[keepaspectratio, width=6.0cm]{figures/origi_spec/stripe2.pdf}
+    \end{minipage}
+    \caption{Two matrices with 0 and 1 values changing per column}
+    \label{fig:stripe_spec}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+    \begin{center}
+        \includegraphics[width=1.0\columnwidth]{figures/experiment_block_matrix.pdf}
+    \end{center}
+	\caption{Example of block permutations used in the experiment.}
+	\label{fig:ex_block}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+    \begin{center}
+        \includegraphics[width=1.0\columnwidth]{figures/1ratio_5ratio_permutation.pdf}
+    \end{center}
+	\caption{Example of permuting in two blocks according to proportions.}
+	\label{fig:1_5ratio_perm}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{table}[t]
 \begin{center}
@@ -42,115 +111,107 @@
    Signal & Language & Data name &Length~[s]  \\ \hline
    Speech & English & dev3\_female4\_src\_2 & 10.0  \\ \hline
    Speech & English & dev2\_male4\_src\_2 &  10.0 \\ \hline
+   Piano  & & dev2\_nodrums\_liverec\_250ms\_src\_3 & 10.0\\ \hline
+   Drum  & & dev2\_wdrums\_liverec\_250ms\_src\_3 & 10.0 \\ \hline 
    \hline
   \end{tabular}
  \end{center}
 \end{table}
 
-本実験では，提案するDNNに基づくパーミュテーション解決法において，どの程度各周波数成分の並び替えができるかを実験的に確認した．
-実験データとして，全ての成分が0と1の行列，25列毎に0と1の値が入れ替わる行列，1列毎に0と1の値が入れ替わる行列の3パターンを使用した．行列のサイズは全て100行100列とした．
-また，ブロックパーミュテーションと呼ばれる，ブロック単位で音源分離に失敗することをふまえ，2行，4行，8行ごとに各周波数成分をシャッフルした実験も同時に実施した．
-1列毎に0と1の値が入れ替わる行列に対しては，95\%の割合で1行ごとにシャッフルしそれ以外は2行ごとにシャッフルした場合と，99\%の割合で1行ごとにシャッフルしそれ以外は2行ごとにシャッフルした場合の実験も行った．
-加えて，実際の音声信号に対して提案手法がどの程度適用できるかを調べるために，Table~\ref{table:wav}に示すようにSiSEC2011~\cite{Sisec}の英語の音声信号（男性1名及び女性1名）2種類を使用した．
-音声信号に対するSTFTは，fftサイズ2048~ms，シフトサイズ1024~msに設定した．また，音声データに対しては8行ごとにシャッフルした場合と16行ごとにシャッフルした場合の2種類の実験を行った．
-学習データには，完全分離信号$\bm{Z}_1$と$\bm{Z}_2$の各周波数成分をランダムでシャッフルしたものを用いた．
-検証データには学習データにはないシャッフルパターンを用いて$\bm{Z}_1$と$\bm{Z}_2$の各周波数成分をシャッフルさせることで作成した．
+学習データには，完全分離信号$\check{\bm{Z}}_1$と$\check{\bm{Z}}_2$の各周波数成分をランダムでシャッフルしたものを用いた．
+検証データには学習データにはないシャッフルパターンを用いて$\check{\bm{Z}}_1$と$\check{\bm{Z}}_2$の各周波数成分をシャッフルさせることで作成した．
 DNNの最適化法にはAdam\cite{adam}を用い，ハイパーパラメータはそれぞれ$\varepsilon=1.0\times10^{-8},~\beta_1 = 0.9,~\beta_2 = 0.999$及び学習率$\eta=0.001$とした．
 その他の学習パラメータについては，バッチサイズを8，エポック数を1000，学習に用いるシャッフルパターンを300として誤差逆伝搬学習を行った．
 主観評価として，各周波数成分において正しく並び替えを行う割合，即ち検証データに対する正答率を用いる．
 
-
 %----------------------------------------------
-\section{実験結果}
+\subsection{実際の音響信号を用いた実験の条件}
+\label{sec:ex_condition_audio}
+%----------------------------------------------
+実際の音響信号に対して提案手法がどの程度適用できるかを調べるために，Table~\ref{table:wav}に示すようにSiSEC2011~\cite{Sisec}の英語の音声信号（男性1名及び女性1名）2種類と楽器音（ピアノとドラム）2種類を使用した．
+音響信号に対するSTFTは，fftサイズ2048~ms，シフトサイズ1024~msに設定した．音声信号と楽器音の分離に対しては，ブロックパーミュテーションを解くことを想定し，16行ごとに周波数成分をシャッフルした場合の実験を行った．
+最適化法やハイパーパラメータについては，\ref{sec:ex_condition_matrix}項の条件と同じである．
+%----------------------------------------------
+\section{人工データに対する実験結果}
 \label{sec:ex_res}
 %----------------------------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=1.0\columnwidth]{figures/main_01mat_graph.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of a matrix with only zeros and a matrix with only ones.}
-	\label{fig:accu_01mat}
-\end{figure}
+\begin{figure*}[!t]
+    \centering
+    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/01mat_1block_graph.pdf}
+    \label{fig:acc_01mat_1block}}
+    \\
+    \subfloat[Spectrogram of estimated signal and predictive separation signal]{\includegraphics[clip, width=5.0in]{figures/01mat_1block.pdf}
+    \label{fig:spec_01mat_1block}}  
+    \caption{Experimental results using matrix in Fig~\ref{fig:01mat_spec} (random shuffle for each frequency).}
+    \label{fig:01mat_1block}
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=1.0\columnwidth]{figures/SVGgraph_25stripe.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of two matrices with 0 and 1 values swapped every 25 columns.}
-	\label{fig:accu_25stripe}
-\end{figure}
+\begin{figure*}[!t]
+    \centering
+    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph_25stripe_1block.pdf}
+    \label{fig:acc_25mat_1block}}
+    \\
+    \subfloat[Spectrogram of estimated signal and predictive separation signal]{\includegraphics[clip, width=5.0in]{figures/25stripe_1block.pdf}
+    \label{fig:spec_25mat_1block}}  
+    \caption{Experimental results using the matrix in Fig~\ref{fig:25stripe_spec} (random shuffle for each frequency).}
+    \label{fig:25mat_1block}
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=1.00\columnwidth]{figures/SVGstripe_graph.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of two matrices with 0 and 1 values swapped per column.}
-	\label{fig:accu_stripe}
-\end{figure}
+\begin{figure*}[!t]
+    \centering
+    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph_stripe_1block.pdf}
+    \label{fig:acc_stripe_1block}}
+    \\
+    \subfloat[Spectrogram of estimated signal and predictive separation signal]{\includegraphics[clip, width=5.0in]{figures/stripe_1block.pdf}
+    \label{fig:spec_stripe_1block}}  
+    \caption{Experimental results using the matrix in Fig~\ref{fig:stripe_spec} (random shuffle for each frequency).}
+    \label{fig:stripe_1block}
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=0.8\columnwidth]{figures/graph_stripe_1block99ratio.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of two matrices with 0 and 1 values swapped in each column with a 1\% probability of shuffling two rows together and the rest shuffled row by row.}
-	\label{fig:accu_stripe_1block99ratio}
-\end{figure}
+\begin{figure*}[!t]
+    \centering
+    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph_stripe_1block95ratio.pdf}
+    \label{fig:acc_stripe_95ratio_1block}}
+    \\
+    \subfloat[Spectrogram of estimated signal and predictive separation signal]{\includegraphics[clip, width=5.0in]{figures/stripe95ratio_1block_spec.pdf}
+    \label{fig:spec_stripe_95ratio_1block}}  
+    \caption{Experimental results using the matrix in Fig~\ref{fig:stripe_spec} (random shuffle for each frequency).}
+    \label{fig:stripe_95ratio_1block}
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=0.8\columnwidth]{figures/graph_stripe_1block95ratio.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of two matrices with 0 and 1 values swapped per column with a 5\% probability of shuffling two rows together and the rest shuffled row by row.}
-	\label{fig:accu_stripe_1block95ratio}
-\end{figure}
+\begin{figure*}[!t]
+    \centering
+    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph_stripe_1block99ratio.pdf}
+    \label{fig:acc_stripe_99ratio_1block}}
+    \\
+    \subfloat[Spectrogram of estimated signal and predictive separation signal]{\includegraphics[clip, width=5.0in]{figures/stripe99ratio_1block_spec.pdf}
+    \label{fig:spec_stripe_99ratio_1block}}  
+    \caption{Experimental results using the matrix in Fig~\ref{fig:stripe_spec} (random shuffle for each frequency).}
+    \label{fig:stripe_99ratio_1block}
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=0.8\columnwidth]{figures/inkscape_graph_audio_8block.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of audio data shuffled into groups of 8 lines each.}
-	\label{fig:accu_audio_8block}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=0.8\columnwidth]{figures/inkscape_graph_audio_16block.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Accuracy curves of DNN for training and validation with datasets of audio data shuffled into groups of 16 lines each.}
-	\label{fig:accu_audio_16block}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-Fig.~\ref{fig:accu_01mat}〜Fig.~\ref{fig:accu_stripe}には，全ての成分が0と1の行列，25列毎に0と1の値が入れ替わる行列，1列毎に0と1の値が入れ替わる行列の周波数成分に対して
-それぞれ1行，2行，4行，8行分をまとめてシャッフルを行った時の結果を示す．この結果から，各周波数成分の8行分をまとめてシャッフルした場合，実験を行った全てのパターンにおいてどれも正答率が100\%に近い値となっている．
-しかし，1列毎に0と1の値が入れ替わる行列に対して各行ごとにシャッフルを行った場合は，正答率が54\%程度となった．即ち，提案手法において各行ごとにシャッフルを行なった行列に対してはパーミュテーション問題を解決することが難しいが，ブロック単位でのパーミュテーション問題は容易に解けると言える．
-Fig.~\ref{fig:accu_stripe_1block99ratio}とFig.~\ref{fig:accu_stripe_1block95ratio}より，1列毎に0と1の値が入れ替わる行列に対して，95\%の割合で1行ごとにシャッフルしそれ以外は2行ごとにシャッフルした場合の正答率は93\%程度となったが，99\%の割合で1行ごとシャッフルしそれ以外は2行ごとにシャッフルした場合の正答率は60\%程度となった．
+Fig.~\ref{fig:01mat_1block}--Fig.~\ref{fig:stripe_1block}には，全ての成分が0と1の行列，25列毎に0と1の値が入れ替わる行列，1列毎に0と1の値が入れ替わる行列の周波数成分に対して各周波数毎にシャッフルを行った時の結果を示す．
+この結果から，各周波数成分毎にシャッフルした場合，Fig.~\ref{fig:01mat_spec}やFig.~\ref{fig:25stripe_spec}に示すような，比較的簡易的な行列に対しては，それぞれ正答率が100\%に近い値となっていることがわかる．
+Fig.~\ref{fig:01mat_spec}とFig.~\ref{fig:25stripe_spec}の推定分離信号$\hat{\bm{Z}}_1$，$\hat{\bm{Z}}_2$は少しの間違いは含んでいるものの，おおよそ並び替えができていることがわかる．
+しかし，Fig.~\ref{fig:stripe_spec}に示すような，1列毎に0と1の値が入れ替わる行列に対して各周波数成分毎にシャッフルを行った場合は，Fig.~\ref{fig:stripe_1block}に示すように正答率が54\%程度となった．
+$\hat{\bm{Z}}_1$，$\hat{\bm{Z}}_2$を見ても並び替えができていないことがわかる．
+即ち，提案手法において各行ごとにシャッフルを行なった行列に対してはパーミュテーション問題を解決することが難しいが，ブロック単位でのパーミュテーション問題は容易に解けると言える．
+Fig.~\ref{fig:acc_stripe_95ratio_1block}とFig.~\ref{fig:acc_stripe_99ratio_1block}は，Fig.~\ref{fig:1_5ratio_perm}のように5\%の割合で2行ごとにシャッフルしそれ以外は1行ごとにシャッフルした行列と，
+1\%の割合で2行ごとシャッフルしそれ以外は1行ごとにシャッフルした行列を用いて実験を行った結果を示す．
+Fig.~\ref{fig:stripe_95ratio_1block}とFig.~\ref{fig:stripe_99ratio_1block}より，5\%の割合で2行ごとにシャッフルしそれ以外は1行ごとにシャッフルした場合の正答率は93\%程度となったが，
+1\%の割合で2行ごとシャッフルしそれ以外は1行ごとにシャッフルした場合の正答率は60\%程度となった．
 このことより，DNNは少しでもブロック単位でシャッフルが行われていると学習が容易となることがわかる．
-Fig.~\ref{fig:accu_audio_8block}とFig.~\ref{fig:accu_audio_16block}より，音声データに対して8行ごとと16行ごとのブロック単位でのパーミュテーション問題として考え実験を行った結果，どちらのグラフでも正答率が80\%を超えた．
-
-
 
 \clearpage
 
