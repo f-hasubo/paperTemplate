@@ -21,15 +21,17 @@
 \usepackage{udline}
 
 % \newcommand{\delete}[1]{\textcolor{blue}{\Sl{#1}}}
+\captionsetup[subfigure]{labelformat=simple}
+\renewcommand{\thesubfigure}{(\alph{subfigure})}
 \renewcommand{\CancelColor}{\color{blue}}
 \newcommand{\Add}[1]{\textcolor{red}{#1}}
 \newcommand{\Erase}[1]{\textcolor{red}{\sout{\textcolor{black}{#1}}}}
 \renewcommand{\figurename}{Fig. }
 \renewcommand{\tablename}{Table }
-\newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\blue}[1]{\textcolor{blue}{\Sl{#1}}}
+\newcommand{\red}[1]{\textcolor{black}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{\Sl{}}}
 %%%%% タイトル %%%%%
-\title{\underline{深層学習に基づく多チャネル音源分離のための}\\\underline{パーミュテーション解決の基礎的実験}}
+\title{\underline{深層パーミュテーション解決法の基礎的検討}}
 %\titlewidth{}% タイトル幅 (指定するときは単位つきで)
 
 
@@ -47,7 +49,7 @@
 \chairperson{辻 正敏 教授}% 1つ引数をとる (役職まで含めて書く)
 
 %%%%% 提出年月 %%%%%
-\date{令和X年X月X日} % 和暦表示（卒論はこっちが正しい）
+\date{令和4年2月10日} % 和暦表示（卒論はこっちが正しい）
 %\handin{2020}{2} % 西暦表示
 
 %%%%% \usepackage等のプリアンブル宣言（macros.texに記載） %%%%%
@@ -62,38 +64,36 @@
 \frontmatter
 
 %%%%% English title %%%%%
-\etitle{Basic experiments on permutation resolution for multi-channel source separation based on deep learning.}
+\etitle{Basic study for deep permutation solver.}
 
 %%%%% Abstract %%%%%
 \eabstract{ % これ単体で複数ページにまたがる場合はエラーが出るので注意，アブスト内で改段落は禁止
-  In this thesis, we deal with audio source separation, which is a technique to separate audio sources from an
-  observed signal. This technology can be used to separate speech from multiple people speaking at the same time, 
-  to separate speech from background noise, or to separate musical instruments in a music signal.
-  One of the popular source separation methods is frequency-domain independent conponent analysis (FDICA). In FDICA,
-  the separation is performed with applying independent component analysis to each frequency. However, 
-  the order of the estimated signal in each frequency is not aligned among all frequencies, resulting in the so-called
-  permutation problem. In recent years, deep neural networks (DNN) have been proposed to solve the permutation problem, 
-  but the problem is that source separation of more than three sources is not realistic from the viewpoint of computational complexity and Algorithmic Complexity.
-  In this paper, we propose a new algorithm for the DNN-based permutation problem and the block-wise permutation problem.
-  The proposed DNN learns the characteristics of the complex time-frequency structure of the separated signals in advance and predicts whether the permutation mismatch occurs or not for 
-  all frequency bins. The performance of the proposed method in solving the permutation problem is evaluated by the percentage of correct answers in all frequency bins.
-  The experimental results show that the proposed DNN permutation solution has a correct answer rate close to 100\% for artificially created pseudo block-wise permutation problems.  
-  In addition, a block-by-block permutation problem on actual audio data showed a correct answer rate of over 80\%.
+Audio source separation is a technique for estimating specific audio sources from an observed mixture signal with multiple sources. 
+This technique can be used for many applications, e.g., speech estimation of multiple speech mixture, reduction of background noise, and extraction of individual musical instrument signals in music.
+Frequency-domain independent component analysis (FDICA) is a typical audio source separation method that applies independent component analysis to each of frequencies. 
+However, FDICA encounters the so-called permutation problem, which is a frequency-wise reordering problem of separated source components. 
+Thus, FDICA requires the permutation solver as post processing.
+Recently, a new permutation solver based on deep neural networks (DNN) was proposed, but the existing method has a problem that the algorithm becomes complicated for the separation of three or more sources.
+In this thesis, I propose a simpler algorithm of deep permutation solver and investigates the validity of using DNN to solve the permutation problem by experiments. 
+The proposed method directly predicts the permutation of the separated source components for all the frequencies.
+Since the permutation of the entire estimated sources is arbitrary, permutation invariant training is introduced.
+Experimental results show that the proposed deep permutation solver provides nearly 100% correct permutations for artificially produced permutation problems.
+In addition, for the actual speech and music signals, the proposed method achieved over 90% accuracy for a block-wise permutation problem.
 }
 
 %%%%% 概要 %%%%%
 \abstract{ % これ単体で複数ページにまたがる場合はエラーが出るので注意，アブスト内で改段落は禁止
- 音源分離とは，複数の未知の音源が混ざった観測信号から，混ざる前の個々の音源を推定する技術である．この技術は，複数人が同時に発話した内容をそれぞれの音声に分けたい場合や，背景雑音と音声を分離したいとき，\red{さらには音楽信号における楽器音ごとの分離などに}利用される．
- 代表的な音源分離手法の1つとして時間周波数領域独立成分分析（frequency-domain independent conponent analysis: FDICA）がある．これは，周波数毎に独立成分分析を適用することで分離を行う．
- しかしFDICA にはパーミュテーション問題と呼ばれる分離信号の並び替え問題が付随するため，ポスト処理としてパーミュテーション解決が必要となる．近年では，
- 深層ニューラルネットワーク（deep neural networks: \blue{DNNs}\red{DNN}）を用いたパーミュテーション問題の解決法が提案され\blue{てき}たが，3音源以上の音源分離は計算量の観点\red{及びアルゴリズムの複雑性}から現実的ではないことが課題として挙げられる．
- 本論文では，パーミュテーション問題，またブロック単位でのパーミュテーション問題に対して，\blue{新たなアルゴリズムを提案する}\red{DNNに基づく新しいアプローチを提案し，パーミュテーション問題に対するDNNに基づく解法の妥当性について実験的に調査する}．
- 提案手法のDNNは，分離信号の複雑な時間周波数構造の特徴を事前に学習し，全周波数\blue{ビン}についてパーミュテーション不整合が生じているか否かを予測する．
- 提案手法のパーミュテーション問題の解決性能は，全周波数の正答率で評価する．実験結果から，提案するDNNパーミュテーション解決法は人工的に作成した擬似的なブロック単位でのパーミュテーション問題に対して，100\%に近い正答率を示した．
- また，実際の音声データに対してもブロック単位でのパーミュテーション問題として実験を行うと，80\%を超える正答率を示した．
+ 音源分離とは，複数の未知の音源が混ざった観測信号から，混ざる前の個々の音源を推定する技術である．この技術は，複数人の同時発話に対する各人の音声の推定，背景雑音の抑圧，\red{音楽信号の各楽器音の抽出等に}利用される．
+ 代表的な音源分離手法の1つである時間周波数領域独立成分分析（frequency-domain independent component analysis: FDICA）は，周波数毎に独立成分分析を適用することで分離を行う．
+ しかしFDICA にはパーミュテーション問題と呼ばれる周波数毎の分離信号成分の並び替え問題が付随するため，ポスト処理としてパーミュテーション解決法の適用が必要となる．
+ 近年では，深層ニューラルネットワーク（deep neural networks: \blue{DNNs}\red{DNN}）を用いたパーミュテーションの解決法（深層パーミュテーション解決法）が提案され\blue{てき}たが，既存手法は3音源以上の音源分離において\red{アルゴリズムが極端に複雑化する課題がある}．
+ 本論文では，より簡便なアルゴリズムによる深層パーミュテーション解決法を提案し，\blue{新たなアルゴリズムを提案する}\red{パーミュテーション問題をDNNで解くことの妥当性について実験的に調査する}．
+ 提案手法は，全周波数成分ついて分離信号の正しいパーミュテーションを直接予測する．
+ このとき，音源信号全体の予測順序は任意であるため，順序不変学習を用いる．実験結果から，提案する深層パーミュテーション解決法は人工的に作成したパーミュテーション問題に対して，100\%に近い正答率を示した．
+ また，実際の音声及び音楽信号に対してもブロック単位のパーミュテーション問題であれば，90\%を超える正答率を示した．
 }
 
-\keywords{\blue{FDICA}\red{frequency-domain independent conponent analysis}, permutation solver, deep neural networks}
+\keywords{\blue{FDICA}\red{frequency-domain independent component analysis}, permutation solver, deep neural networks}
 
 \makeseparatedabstract % 英語アブストと日本語アブストをそれぞれ独立したページとする
 %\makeabstract % 英語アブストと日本語アブスト合わせて1枚に収まる場合はこちらを使ってもよい，ただし2枚になる場合はエラーが出る

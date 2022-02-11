@@ -6,7 +6,7 @@
 \section{まえがき}
 %----------------------------------------------
 前章では，\red{音響信号のBSSにおいて重要な}FDICA\blue{に伴い生じる}\red{の}パーミュテーション問題\blue{と従来の深層}\red{について詳しく述べた．また，音源モデルに基づきパーミュテーション問題を回避する手法や，近年提案された深層}パーミュテーション解決法について説明した．
-\red{さらに，従来の深層パーミュテーション解決法では，音源数$N$の増加に伴ってアルゴリズムが極端に複雑になってしまう課題について述べた．}
+\red{さらに，既存の深層パーミュテーション解決法では，音源数$N$の増加に伴ってアルゴリズムが極端に複雑になってしまう課題について述べた．}
 本章では，\blue{組み合せ爆発を起こすことのない，DNNを用いたデータ駆動型パーミュテーション解決法を新たに提案する．}
 \red{音源数$N$が増加した場合でもアルゴリズムが複雑化することのない深層パーミュテーション解決法を新たに提案する．}
 \blue{{\ref{sec:moti}}節では，IVAやILRMAのようなブラインド（教師無し）なパーミュテーション解決法における課題と従来の深層パーミュテーション解決法における課題を述べ，データ駆動型の教師ありパーミュテーション解決法を新たに提案する動機について明らかにする．}
@@ -51,14 +51,6 @@ $\bm{P}_i^{-1}$の\blue{推定のみ失敗していることを示している�
 \red{提案手法は，音源数$N$の増加に対してアルゴリズムが極端に複雑化しない手法として提案するが，本論文は基礎的な実験に終始するため，音源数及びチャネル数が$N=M=2$の状況のみを取り扱う．$N\geq 3$以上の条件での調査については今後の課題となる．}
 
 \blue{提案する}\red{本論文で提案する深層}パーミュテーション解決法\blue{の概要}\red{を適用する処理の概要}は以下の通りである．
-
-\begin{itemize}
-    \item \blue{分離信号{$\bm{Y}_1$及び$\bm{Y}_2$}から全周波数成分の値を保持するミニ振幅スペクトログラムを取り出し，それぞれに対して全ての音源のパワースペクトログラムの値を基準にして正規化を行った値をDNNに入力する}
-    \item \blue{DNNは入力された2つのミニ振幅スペクトログラムの値がどの音源の値かを予測し，{$0$〜$1$}の間の確率値として出力する}
-    \item \blue{DNNから出力された確率値に従ってシャッフルされたスペクトログラムを並び替えた行列と，完全に分離されたスペクトログラムとの間で損失を取得する}
-    \item \blue{{$\bm{Y}_1$及び$\bm{Y}_2$}の全時間方向に対してDNNが適用される}
-    \item \blue{最終的な推定値（ラベル）{$\widehat{\bm{L}}$}は，予測値の時間方向への多数決結果から決定される}
-\end{itemize}
 \red{
 \begin{enumerate}
 \renewcommand{\labelenumi}{(\alph{enumi})}
@@ -88,8 +80,6 @@ MLPの入出力はあらかじめ決められた次元数のベクトルでな�
 即ち，2音源の場合DNNの入力に用いる信号成分は次のようになる．}
 \red{ここで，同一音源に属する成分の相関を強調するため，推定信号$(\bm{Y}_1, \bm{Y}_2)$のパワースペクトラム$(|\bm{Y}_1|^{.2}, |\bm{Y}_2|^{.2})$の比率に変換する正規化\cite{Permutation_solverBSS}を施す．この処理は次式で表される．}
 \begin{align}
-    \cancel{\widehat{\bm{Y}}_1  = \frac{|\bm{Y}_1|^2}{|\bm{Y}_1|^2+|\bm{Y}_2|^2}}\\
-    \cancel{\widehat{\bm{Y}}_2  = \frac{|\bm{Y}_2|^2}{|\bm{Y}_1|^2+|\bm{Y}_2|^2}}\\
     \red{\overline{\bm{Y}}_1 = \frac{|\bm{Y}_1|^{.2}}{|\bm{Y}_1|^{.2}+|\bm{Y}_2|^{.2}}} \in [0,1]^{I \times J}\\
     \red{{\overline{\bm{Y}}_2 = \frac{|\bm{Y}_2|^{.2}}{|\bm{Y}_1|^{.2}+|\bm{Y}_2|^{.2}}} \in [0,1]^{I \times J}}
 \end{align}
@@ -98,21 +88,17 @@ MLPの入出力はあらかじめ決められた次元数のベクトルでな�
 \blue{この時，{$i = 1,\ldots,I$及び$j = \tau,\ldots,J-\tau$}はそれぞれ全周波数帯域の周波数ビン及び時間フレームのインデクスである．DNNの入力にはミニ振幅スペクトログラムを用いるので，元のスペクトログラムの値からはみ出ることがないように{$j$}の範囲を限定的にしている．
 ここで，行列の {$|\cdot|^{.2}$} は，要素ごとの絶対値の二乗を示す．時間フレーム{$j$}における分離信号を次式で表す．}
 \red{このような正規化は，文献\cite{Permutation_solverBSS}で詳しく解析されているように同一音源に属する成分の相関を強調させる利点があるだけでなく，推定信号の値が区間$[0,1]$の範囲に限定されることから，DNNの学習を安定させる効果も期待できる．}
+\red{次に，推定信号の正規化振幅スペクトログラム$(\overline{\bm{Y}}_1, \overline{\bm{Y}}_2)$から，Fig.~\ref{fig:make_minispec}に示すように，時間フレーム$j$を中心とする局所時間振幅スペクトログラムを抽出する．この処理は次式で表される．}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=0.95\columnwidth]{figures/make_minispec.pdf}
     \end{center}
     \vspace{-8pt}
-	\caption{Create a local time-amplitude spectrogram.}
+	\caption{Extraction of local-time-frame amplitude spectrogram.}
 	\label{fig:make_minispec}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\red{次に，推定信号の正規化振幅スペクトログラム$(\overline{\bm{Y}}_1, \overline{\bm{Y}}_2)$から，Fig.~\ref{fig:make_minispec}に示すように，時間フレーム$j$を中心とする局所時間振幅スペクトログラムを抽出する．この処理は次式で表される．}
-\begin{align}
-    \cancel{\widehat{\bm{y}}_{1j}  = [\widehat{y}_{11j},y_{12j}, \cdots, \widehat{y}_{1Ij} ]^\mathrm{T}}\\
-    \cancel{\widehat{\bm{y}}_{2j}  = [\widehat{y}_{21j},y_{22j}, \cdots, \widehat{y}_{2Ij} ]^\mathrm{T}}
-\end{align}
 \red{
     \begin{align}
         \check{\bm{Y}}_{j1} &= [ \overline{\bm{y}}_{(j-\beta)1}, \overline{\bm{y}}_{(j-\beta+1)1}, \cdots, \overline{\bm{y}}_{(j-1)1}, \overline{\bm{y}}_{j1}, \overline{\bm{y}}_{(j+1)1}, \cdots, \overline{\bm{y}}_{(j+\beta)1}  ] \in [ 0, 1 ]^{I\times (2\beta+1)} \label{eq:y_check1}\\
@@ -129,49 +115,47 @@ MLPの入出力はあらかじめ決められた次元数のベクトルでな�
 	\label{fig:DNN_input}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\blue{ここで，{$\widehat{y}_{1ij}$は$\widehat{\bm{Y}}_1$の$ij$}要素であり，{$\widehat{y}_{2ij}$は$\widehat{\bm{Y}}_2$の$ij$}要素を表す．}
-\red{ここで，$\overline{\bm{y}}_{jn}\in [0,1]^{I}$は正規化振幅スペクトログラム$\overline{\bm{Y}}_n$の$j$列目の列ベクトル（時間フレーム$j$の正規化振幅スペクトル）を表す．また，$\beta$（0以上の整数）は時間フレーム$j$の近傍時間フレームをどの程度DNNに入力するかを決めるパラメータである．}
+\red{ここで，$\overline{\bm{y}}_{jn}\in [0,1]^{I}$は正規化振幅スペクトログラム$\overline{\bm{Y}}_n$の$j$列目の列ベクトル（時間フレーム$j$の正規化振幅スペクトル）を表す．
+また，$\beta$（0以上の整数）は時間フレーム$j$の近傍時間フレームをどの程度DNNに入力するかを決めるパラメータである．}
 \blue{DNNの入力として与える情報}\red{提案手法では，DNNの入力ベクトル}は，\blue{{$j$}近傍の時間フレームの列ベクトルを結合したベクトルとする．}
 \red{式(\ref{eq:y_check1})及び(\ref{eq:y_check2})で得られる両信号の正規化局所時間振幅スペクトログラム$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$をFig.~\ref{fig:DNN_input}のように一次元に整形（ベクトル化）したベクトルである．}
 \blue{これを{$\bm{x}_j$}とおくと，次式のように構成される．}
 \red{入力された行列をベクトル化する処理を$\mathrm{vec}(\cdot)$と表記すると，DNNの入力ベクトルは次式となる．}
-\blue{また，{$j$}近傍の時間フレームの幅は{$\tau$}とする．}
 \begin{align}
-    \cancel{\bm{x}_j = [\widehat{\bm{y}}_{1 (j-\tau)}^\mathrm{T}, \cdots,\widehat{\bm{y}}_{1 (j+\tau)}^\mathrm{T}, \widehat{\bm{y}}_{2 (j-\tau)}^\mathrm{T},\cdots,\widehat{\bm{y}}_{2 (j+\tau)}^\mathrm{T} ]^\mathrm{T}}\\
-    \red{\bm{d}_j = \mathrm{vec}( [ \check{\bm{Y}}_{j1}~\check{\bm{Y}}_{j2} ] ) \in [0,1]^{2I(2\beta+1)}}
+    \red{\bm{d}_j = \begin{bmatrix}
+        \mathrm{vec}( \check{\bm{Y}}_{j1} ) \\
+        \mathrm{vec}( \check{\bm{Y}}_{j2} )
+      \end{bmatrix}
+    \in [0,1]^{2I(2\beta+1)}}
 \end{align}
-\blue{Fig.~{\ref{fig:DNN_input}}に示すように，上記の{$\bm{x}_j$}がDNNの入力ベクトルとなる．}
-\red{ここで，$[ \check{\bm{Y}}_{j1}~\check{\bm{Y}}_{j2} ] \in [0, 1]^{I\times (4\beta+2)}$は2つの信号の正規化局所時間振幅スペクトログラムを列方向に結合した行列を表す．}
 
 \red{DNNによる予測は次式で表される．}
 \begin{align}
-    \cancel{\bm{L} = \mathrm{DNN}(\bm{x}_j)}\\
     \red{\hat{\bm{l}}_j = \mathrm{DNN}(\bm{d}_j) \in [ 0, 1 ]^{2I}}
 \end{align}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Calculatation of predicted permutation matrix.]{\includegraphics[clip, width=4.5in]{figures/cal_loss1.pdf}
-    \label{fig:label-A}}
+    \subfloat[Calculatation of predicted permutation matrix.]{\includegraphics[clip, width=5.0in]{figures/cal_loss1.pdf}
+    \label{fig:loss_process1}}
     \\
-    \subfloat[Calculation of MSE with PIT]{\includegraphics[clip, width=5.5in]{figures/cal_loss2.pdf}
-    \label{fig:label-B}}  
-    \caption{Process fo calculating loss function value.}
+    \subfloat[Calculation of MSE with PIT]{\includegraphics[clip, width=5.0in]{figures/cal_loss2_v2.pdf}
+    \label{fig:loss_process2}}  
+    \caption{Process of calculating predicted permutation matrix and loss function value.}
     \label{fig:loss}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \blue{DNNが出力する予測は{$\bm{L} ~\in \mathbb{R}_{[0,1]}^{2 \times I}$}であり，確率値を示す．
 {$\bm{L}$}の1行目には，各周波数成分における音源1である確率値，2行目には，各周波数成分における音源2である確率値が代入される．}
-\red{ここで，$\hat{\bm{l}}_j = [ \hat{l}_{11j}, \hat{l}_{21j}, \cdots, \hat{I1j}, \hat{12j}, \hat{22j}, \cdots, \hat{I2j} ]$は出力である予測ベクトルを表す．
-Fig.~\ref{fig:loss}のように入力されたベクトルを行列化する処理を$\mathrm{mat}(\cdot)$と表記すると，予測ベクトルは次式で再成型される．
+\red{ここで，$\hat{\bm{l}}_j = [ \hat{l}_{11j}, \hat{l}_{21j}, \cdots, \hat{I1j}, \hat{12j}, \hat{22j}, \cdots, \hat{I2j} ]^\mathrm{T}$は出力である予測ベクトルを表す．
+入力されたベクトルを行列化する処理を$\mathrm{mat}(\cdot)$と表記すると，予測ベクトルは次式で再成型される．
 \begin{align}
   \hat{\bm{L}}_j = \mathrm{mat}(\hat{\bm{l}}_j) \in [0, 1]^{I \times 2}
 \end{align}
-再成型された行列$\hat{\bm{L}}_j$はFig.~\ref{fig:loss}に示すように，2つのパーミュテーション問題が生じている入力信号$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$の各周波数成分のそれぞれが
+再成型された行列$\hat{\bm{L}}_j$はFig.~\ref{fig:loss_process1}に示すように，2つのパーミュテーション問題が生じている入力信号$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$の各周波数成分のそれぞれが
 「1番目の音源の成分である確率$l_{i1}$」と「2番目の音源の成分である確率$l_{i2}$」を$\bm{d}_j$から予測したものと定義し，提案手法ではこの定義に基づいて正確な予測ができるDNNを学習する．
 ここで，$(l_{i1}, l_{i2})$は離散確率値であるため$l_{i1}+l_{i2}=1$を満たし，それらの予測値である$(\hat{l}_{i1j}, \hat{l}_{i2j})$もまた$\hat{l}_{i1j}+\hat{l}_{i2j}=1$を満たすようにDNNの中で制約する必要がある．
-この制約は次節で述べる通り，softmax関数を用いて実現できる．詳細は後述するが，パーミュテーション問題の解は時間方向には変化しない（式(\ref{eq:w_fdica})における$\bm{P}_i$は時間フレーム$j$によらない時不変行列である）ため，
+この制約は次節で述べる通り，softmax関数を用いて実現できる．また，詳細は後述するが，パーミュテーション問題の解は時間方向には変化しない（式(\ref{eq:w_fdica})における$\bm{P}_i$は時間フレーム$j$によらない時不変行列である）ため，
 様々な局所時間振幅スペクトログラムの入力$\bm{d}_j$の予測結果$\hat{\bm{L}}_j$を$j$に関して多数決処理することで，より精度の高い予測である予測結果$\hat{\bm{L}}$（この結果は$j$によらない）を生成できる．
 }
 
@@ -184,14 +168,12 @@ Fig.~\ref{fig:loss}のように入力されたベクトルを行列化する処�
     \hat{l}_{i2} & \hat{l}_{i1}
   \end{bmatrix} \label{eq:estPermMat}
 \end{align}
-ここで，$\hat{l}_{i1}$及び$\hat{l}_{i2}$は$\hat{\bm{L}}$の要素である．正解のパーミュテーション行列は順列を並び替える行列であるため，単位行列及び1行列をそれぞれ$\bm{I}$及び$\bm{1}$と表記すると，$N=2$の場合は
-\begin{align}
-  \bm{P}_i = \bm{I}~~~\mathrm{or}~~~\bm{1}-\bm{I}
-\end{align}
-のいずれかとなる．推定パーミュテーション行列$\hat{\bm{P}}_{i}$は式\eqref{eq:estPermMat}であるため，予測が不完全であれば$\bm{I}$又は$\bm{1}-\bm{I}$にはならない可能性があるが，
+ここで，$\hat{l}_{i1}$及び$\hat{l}_{i2}$は$\hat{\bm{L}}$の要素である．正解のパーミュテーション行列は順列を並び替える行列であるため，$N=2$の場合は式(\ref{eq:permu_mat_2dim})のいずれかとなる．
+推定パーミュテーション行列$\hat{\bm{P}}_{i}$は式\eqref{eq:estPermMat}であるため，予測が不完全であれば$\bm{I}$又は$\bm{1}-\bm{I}$にはならない可能性があるが，
 それでも$\hat{l}_{i1}+\hat{l}_{i2}=1$を満たすため，二重確率行列（doubly stochastic matrix: DSM）であることがわかる．
-また，Birkhoff--von Neumannの定理（付録A参照）を考慮すると，パーミュテーション問題の発生している入力データからDSMを予測する提案手法のDNNは，考えうる全てのパーミュテーション行列に対して，
-どのパーミュテーション行列が正解かという確信度を予測していると解釈することもできる．
+また，Birkhoff--von Neumannの定理を考慮すると，パーミュテーション問題の発生している入力データからDSMを予測する提案手法のDNNは，
+考えうる全てのパーミュテーション行列に対する凸結合係数を推定していることになる．
+即ち，考えうるパーミュテーション行列の中でどの行列が正解かという確信度を予測していると解釈することもできる．
 }
 
 %----------------------------------------------
@@ -210,8 +192,8 @@ Fig.~\ref{fig:loss}のように入力されたベクトルを行列化する処�
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Fig.~\ref{fig:Dnnmodel}に提案手法のDNNの構造を示す．
-提案するDNNの構造は，入力層，隠れ層3層，及び出力層の計5層\red{の全結合層（dense layer）}からなる\blue{全結合構成}\red{MLP}となっており，\blue{1～5番目の隠れ層には}\red{隠れ層の1層目から3層目には非線形関数として}rectified linear unit (ReLU)~\cite{relu} 関数
+Fig.~\ref{fig:Dnnmodel}に提案深層パーミュテーション解決法で用いるDNNの構造を示す．
+このDNNは，入力層，隠れ層3層，及び出力層の計5層\red{の全結合層（dense layer）}からなる\blue{全結合構成}\red{MLP}となっており，\blue{1～5番目の隠れ層には}\red{隠れ層の1層目から3層目には非線形関数として}rectified linear unit (ReLU)~\cite{relu} 関数
 \red{を用いている．
 また，3層目の隠れ層から出力層に変換する際には，Fig.~\ref{fig:Dnnmodel}に示すように2つの$I$次元ベクトルに分岐させている．この時の各ベクトルへの変換パラメータは独立している\footnote{すなわち，$2I$次元への全結合層による変換と同様であるが，明示的に分岐させて定義している．}．
 その後，2つの$I$次元の同一インデクスの要素に対してsoftmax関数を適用することで，予測ベクトルの全要素が閉区間$[0,1]$内の値かつ同一インデクスの要素の和が1となることを保証している．
@@ -223,51 +205,40 @@ Fig.~\ref{fig:Dnnmodel}に提案手法のDNNの構造を示す．
 \section{\red{DNN学習時の損失関数}}
 \label{sec:loss}
 %----------------------------------------------
-\blue{誤差逆伝播を行う際の損失は，DNNが出力した確率値に従ってパーミュテーション行列を並び替えた行列と完全に分離された行列との間で平均二乗誤差（mean squared error: MSE）を使用して得る．
-{\ref{sec:in-out}}節より，{$\widehat{\bm{l}}_{n}$}は，全周波数帯域における音源{$n$}の成分が含まれる割合で構成されている．
-また，次式でパーミュテーション行列の並び替えを行い，予測行列{$\widetilde{\bm{Y}}_{1 j} ~\in \mathbb{R}_{\geq 0}^{I \times (2\tau+1)}$と$\widetilde{\bm{Y}}_{2 j} ~\in \mathbb{R}_{\geq 0}^{I \times (2\tau+1)}$}の2種類を導く．}
 \red{DNNの学習は，何らかの損失関数を定義しその値を最小化するパラメータを誤差逆伝播により推定する処理となる．提案手法のDNNは\ref{sec:in-out}節で述べた通り，入力データから周波数毎の正しい音源パーミュテーションを予測するモデルである．
 これは（音源数が$N=2$であれば）$(l_{i1}, l_{i2})$の2クラス分類器であるため，softmax関数を用いて各クラスへの確率値を出力している．
 通常，多クラス分類器の損失関数には，カテゴリカル分布\footnote{多項分布における試行回数を1回とした際の分布である．}の負対数尤度関数であるカテゴリカル交差エントロピー（categorical cross entropy: CCE）を用いることで，DNNの学習を最尤推定の枠組みで行うことができる．
 しかしながら，提案手法の深層パーミュテーション解決法の本来の目的は，全周波数ビンにおいてパーミュテーション行列を正確に予測することではなく，分離信号$(\bm{Z}_1, \bm{Z}_2)$を正確に予測することである．
-例えば，推定信号$(\bm{Y}_1, \bm{Y}_2)$のどちらにもエネルギーがほとんど無いような周波数ビンは，実際はパーミュテーション問題を解決しなくても得られる分離信号$(\bm{Z}_1, \bm{Z}_2)$の音源分離精度には影響しない．
-もしCCEでDNNの損失関数を定義すると，このようなエネルギーが少ない（音源分離にとって重要ではない）周波数ビンの予測精度と，大きなエネルギーを有する（音源分離にとって重要な）周波数ビンの予測精度が等しい重要度で扱われることになるため，音源分離性能向上の妨げとなる可能性がある．
-そこで提案手法では，下記で説明する通り，DNNで予測された音源パーミュテーションに基づいて推定信号$(\bm{Y}_1, \bm{Y}_2)$を並び替えた予測分離信号$(\hat{\bm{Z}}_1, \hat{\bm{Z}}_2)$と正解の分離信号$(\bm{Z}_1, \bm{Z}_2)$の間の平均二乗誤差（mean squared error: MSE）を用いる．}
+例えば，推定信号$(\bm{Y}_1, \bm{Y}_2)$のどちらにもエネルギーがほとんど無いような周波数ビンは，実際は誤った分離信号の順序となっていても得られる分離信号$(\bm{Z}_1, \bm{Z}_2)$の音源分離精度には影響しない．
+もしCCEでDNNの損失関数を定義すると，このようなエネルギーが少ない（音源分離にとって重要ではない）周波数ビンのパーミュテーション予測精度と，
+大きなエネルギーを有する（音源分離にとって重要な）周波数ビンの予測精度が等しい重要度で扱われることになるため，音源分離性能向上の妨げとなる可能性がある．}
+
+\red{そこで提案手法では，下記で説明する通り，DNNで予測された音源パーミュテーションに基づいて推定信号$(\bm{Y}_1, \bm{Y}_2)$を並び替えた予測分離信号$(\hat{\bm{Z}}_1, \hat{\bm{Z}}_2)$と正解の分離信号$(\bm{Z}_1, \bm{Z}_2)$の間の平均二乗誤差（mean squared error: MSE）を示す．}
+
+\red{Fig.~\ref{fig:loss_process1}に損失関数の計算の処理の流れを示す．まず，予測結果に対応する行列$\hat{\bm{V}} \in \mathbb{R}^{R\times C}$とラベルに対応する行列$\bm{V} \in \mathbb{R}^{R\times C}$の間のMSEを次式で定義する．}
 \red{
 \begin{align}
     \mathrm{MSE}(\hat{\bm{V}}, \bm{V}) &= \frac{ 1 }{ RC } \| \hat{\bm{V}} - \bm{V} \|_\mathrm{Fr}^2 \\
     &= \frac{ 1 }{ RC } \sum_{r, c} \left( \hat{v}_{rc} - v_{rc} \right)^2 \label{eq:mseLoss}
 \end{align}
-ここで，$\hat{v}_{rc}$及び$v_{rc}$はそれぞれ行列$\hat{\bm{V}}$及び$\bm{V}$の要素，$r = 1, 2, \cdots, R$及び$c = 1, 2, \cdots, C$はそれぞれ行列$\hat{\bm{V}}$及び$\bm{V}$の行と列のインデクス，
-$\|\cdot\|_\mathrm{Fr}$はFrobeniusノルムである．次に，DNNの入力である正規化局所時間振幅スペクトログラム$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$に対する予測結果$\bm{L}_j$と式(\ref{eq:estPermMat})を用いて，
-（$j$を中心とする局所時間フレームの）推定局所時間パーミュテーション行列$\hat{\bm{P}}_{ij}$を構成し，式(\ref{eq:w_fdica})と同様に音源パーミュテーションを並び替えた予測分離信号を$(\widehat{\check{\bm{Z}}}_{j1}, \widehat{\check{\bm{Z}}}_{j2})$と定義する．
+ここで，$\hat{v}_{rc}$及び$v_{rc}$はそれぞれ行列$\hat{\bm{V}}$及び$\bm{V}$の要素，$r = 1, 2, \cdots, R$及び$c = 1, 2, \cdots, C$はそれぞれ行列$\hat{\bm{V}}$及び$\bm{V}$の行と列のインデクス，$\|\cdot\|_\mathrm{Fr}$はFrobeniusノルムである．
+次に，Fig.~\ref{fig:loss_process1}に示すように，DNNの入力である正規化局所時間振幅スペクトログラム$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$に対する予測結果$\bm{L}_j$と式(\ref{eq:estPermMat})を用いて，
+（$j$を中心とする局所時間フレームの）推定局所時間パーミュテーション行列$\hat{\bm{P}}_{ij}$を構成する．また，Fig.~\ref{fig:loss_process2}に示すように，式(\ref{eq:w_fdica})で音源パーミュテーションを並び替えた予測分離信号$(\widehat{\check{\bm{Z}}}_{j1}, \widehat{\check{\bm{Z}}}_{j2})$を求める．
 さらに，この予測分離信号に対する正解ラベル（Fig.~\ref{fig:make_minispec}と同様の手順で，分離信号$(\bm{Z}_1, \bm{Z}_2)$から$j$を中心とする局所時間フレームの局所時間振幅スペクトログラムを抽出した行列）を$(\check{\bm{Z}}_{j1}, \check{\bm{Z}}_{j2})$と定義する．
-これらの定義と式\eqref{eq:mseLoss}を用いて，前述の誤差関数$\mathcal{L}$は，$(\widehat{\check{\bm{Z}}}_{j1}, \widehat{\check{\bm{Z}}}_{j2})$及び$(\check{\bm{Z}}_{j1}, \check{\bm{Z}}_{j2})$間のMSEとして次式で表せる．
+これらの信号と式\eqref{eq:mseLoss}を用いて，前述の誤差関数$\mathcal{L}$は，$(\widehat{\check{\bm{Z}}}_{j1}, \widehat{\check{\bm{Z}}}_{j2})$及び$(\check{\bm{Z}}_{j1}, \check{\bm{Z}}_{j2})$間のMSEとして次式で表せる．
 \begin{align}
     \mathcal{L} &= \mathrm{MSE}(\widehat{\check{\bm{Z}}}_{j1}, \check{\bm{Z}}_{j1}) + \mathrm{MSE}(\widehat{\check{\bm{Z}}}_{j2}, \check{\bm{Z}}_{j2}) \label{eq:dnnLossWithoutPit}
 \end{align}
 }
-\blue{ここで，{${y}_{1 i j}$は$\bm{Y}_1$の$ij$}要素であり，{${y}_{2 i j}$は$\bm{Y}_2$の$ij$}要素を表す．}
-\blue{{$\widetilde{\bm{Y}}_{1 j} ~\in \mathbb{R}_{\geq 0}^{I \times (2\tau+1)}$，$\widetilde{\bm{Y}}_{2 j} ~\in \mathbb{R}_{\geq 0}^{I \times (2\tau+1)}$}と
-完全に分離された信号のミニスペクトログラム成分{$\bm{Z}_{1 j}~\in \mathbb{R}_{\geq 0}^{I \times (2\tau+1)}$，$\bm{Z}_{2 j}~\in \mathbb{R}_{\geq 0}^{I \times (2\tau+1)}$}でMSEを使用し，損失を得る．
-また，本論文ではパーミュテーション問題を解くことを考えており，分離信号の順番には触れないため，次式で損失を計算する．}
-\red{但し，パーミュテーション問題の解決は全周波数で推定音源成分を正しく並び替えることだけが目標であり，並び替えた後の分離信号の順序は予測の対象としない．
+\red{但し，パーミュテーション問題の解決は全周波数で推定音源成分を正しく並び替えることだけが目標であり，並び替えた後の分離信号そのものの順序は予測の対象としない．
 すなわち，深層パーミュテーション解決法を適用した結果が，$(\bm{Z}_1, \bm{Z}_2)$及び$(\bm{Z}_2, \bm{Z}_1)$のどちらの順序で出力されようとも構わない．
 式\eqref{eq:dnnLossWithoutPit}で損失関数を定義した場合，分離信号は必ず$(\bm{Z}_1, \bm{Z}_2)$という順序で予測することをDNNに強いているため，
 この問題を解消するために順序不変学習（permutation invariant training: PIT）\cite{PIT}を導入する．具体的には，損失関数を次式で定義する．
 \begin{align}
   \mathcal{L} &= \min \left( \mathrm{MSE}(\widehat{\check{\bm{Z}}}_{j1}, \check{\bm{Z}}_{j1}) + \mathrm{MSE}(\widehat{\check{\bm{Z}}}_{j2}, \check{\bm{Z}}_{j2}),  \mathrm{MSE}(\widehat{\check{\bm{Z}}}_{j1}, \check{\bm{Z}}_{j2}) + \mathrm{MSE}(\widehat{\check{\bm{Z}}}_{j2}, \check{\bm{Z}}_{j1}) \right) \label{eq:dnnLossWithPit}
 \end{align}
-ここで，$\min (\cdot, \cdot)$は複数のスカラー引数の中で最小値を返す処理を表す．この関数の誤差逆伝播は自動微分により実装される．このように，PITを導入することで，パーミュテーション問題さえ解決されれば良く分離信号の出力の順序には依存しないような学習が可能となる．
+ここで，$\min (\cdot, \cdot)$は複数のスカラー引数の中で最小値を返す処理を表す．この関数の誤差逆伝播は自動微分により実装される．このように，PITを導入することで，周波数ビン間のパーミュテーション問題さえ解決されれば良く分離信号そのものの出力の順序には依存しないような学習が可能となる．
 }
-
-\begin{align}
-    \cancel{\mathrm{Loss} = \mathrm{MIN}\{\mathrm{MSE}(\widetilde{\bm{Y}}_{1 j}, \widetilde{\bm{Z}}_{1 j}) + \mathrm{MSE}(\widetilde{\bm{Y}}_{2 j}, \widetilde{\bm{Z}}_{2 j}) ~ , ~ \mathrm{MSE}(\widetilde{\bm{Y}}_{1 j}, \widetilde{\bm{Z}}_{2 j}) + \mathrm{MSE}(\widetilde{\bm{Y}}_{2 j}, \widetilde{\bm{Z}}_{1 j})}\}
-\end{align}
-
-\blue{DNNは上記のLossを最小化するように学習を行う．これらの処理を}\red{この損失関数の計算の処理を}Fig.~\ref{fig:loss}に示す．
-\blue{最終的なラベル{$\widetilde{\bm{L}}$は，$\bm{L}$}の列成分を比較し，値が大きい方のインデクスを含んだベクトルとなる．}
-
 
 %----------------------------------------------
 \section{\red{学習済のDNNのテストデータへの適用}}
@@ -279,7 +250,7 @@ $\|\cdot\|_\mathrm{Fr}$はFrobeniusノルムである．次に，DNNの入力で
         \includegraphics[width=1.0\columnwidth]{figures/majority.pdf}
     \end{center}
     \vspace{-15pt}
-	\caption{DNN predictions for all short-time \cancel{subbands} \red{spectrograms} and their majority decision.}
+	\caption{DNN predictions for all local-time-frame amplitude \red{spectrograms} and their majority decision.}
 	\label{fig:majority}
 	\vspace{-8pt}   % キャプションと本文の間隔微調整用クトル
 \end{figure}
@@ -314,7 +285,7 @@ Fig.~\ref{fig:majority}に示すように$(\check{\bm{Y}}_{1j}, \check{\bm{Y}}_{
 \end{align}
 }
 \blue{{$\widehat{\bm{L}}$}の値に従って，パーミュテーション行列を並び替えることで，パーミュテーション問題の解決を行う．}
-\red{なお，式\eqref{eq:binarization}のバイナリ行列への変換を適用しない場合においても，式\eqref{eq:majorityDecision}を計算することで時間方向の平均化ができるため，式\eqref{eq:majorityDecision}は上記(a)の適用の有無にかかわらず計算する．}
+\red{なお，式\eqref{eq:binarization}のバイナリ行列への変換を適用しない場合においても，式\eqref{eq:majorityDecision}を計算することで時間方向の平均化ができるため，式\eqref{eq:majorityDecision}は上記(a)の適用の有無にかかわらず計算することが望ましい．}
 
 %----------------------------------------------
 \section{本章のまとめ}
