@@ -16,21 +16,23 @@
 \usepackage{flushend} % 2段組みの最終ページの高さを揃える
 
 \renewcommand{\baselinestretch}{0.8} % 行間設定（標準は0.8）
+\newcommand{\red}[1]{\textcolor{black}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{\Sl{}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% 論文情報 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% タイトル %%%%%
-\title{日本語の研究タイトルをここに記述\\タイトルが2行になる場合はこの行にも記述可能}
-\etitle{English title of research theme goes here}
+\title{深層パーミュテーション解決法の基礎的検討}
+\etitle{Basic study for deep permutation solver.}
 
 %%%%% 著者 %%%%%
-\author{高松 太郎}
-\eauthor{Tarou Takamatsu}
+\author{蓮池 郁也}
+\eauthor{Fumiya Hasuike}
 
 
 %----- 図表題が英語の場合は次の2行を有効化 -----%
-%\renewcommand{\figurename}{Fig.~} 
-%\renewcommand{\tablename}{Table~}
+\renewcommand{\figurename}{Fig.~} 
+\renewcommand{\tablename}{Table~}
 %--------------------------------------------%
 
 \begin{document}
@@ -57,84 +59,96 @@
 %----------------------------------------------
 \section{はじめに}
 %----------------------------------------------
+音源位置やマイクロフォン位置等が未知の条件で音源分離を達成する技術はブラインド音源分離（BSS）と呼ばれる．
+観測信号のチャネル数（マイクロフォン数）と混合されている音源数が等しい条件下では，観測信号を時間周波数領域に変換し周波数毎に独立成分分析（ICA）\cite{ICA}を適用する時間周波数領域ICA（FDICA）\cite{FDICA}が提案されている．
+ここで，ICAは一般に推定分離信号の順番が不定であり，FDICAは周波数毎に独立なICAによるBSSを行うため，分離信号の順番が周波数毎にばらばらになってしまう問題が生じる.
+この問題は一般に「パーミュテーション問題」と呼ばれている．
 
-このファイルは卒業論文の予稿のワードテンプレートである．
-このテンプレートに記載されている注意事項を熟読したうえ，予稿の作成に取り掛かること．
-
-%----------------------------------------------
-\section{本文の記述方法}
-%----------------------------------------------
-
-%----------------------------------------------
-\subsection{フォーマット}
-%----------------------------------------------
-
-フォーマットはA4縦用紙に2段組み，2ページで作成する．
-余白は上下が20~mm，左右が25~mmである．
+本稿では，前述の問題を解決するために深層学習（DNN）に基づくパーミュテーション解決法を検討する．
+また，本論文で提案する深層パーミュテーション解決法を人工データと実際の音声及び音楽信号に適用し，DNNに基づくパーミュテーション問題解決の可能性について調査する．
 
 %----------------------------------------------
-\subsection{フォントと各種記号}
-%----------------------------------------------
-
-「1. はじめに」等の章タイトルは11~ptのゴシック系フォント（あるいはそれに準ずるフォント）で記述し，「2.1 フォーマットとフォント」等の節タイトルは10 ptのゴシック系フォントとする．
-本文は全て10~ptの明朝系フォントとし，本文中の半角英数文字は明朝フォントまたはTimes系フォントとする（本テンプレートではTimes系に設定している）．
-なお，全角の英数文字を使うことが無いように注意すること．
-
-段落の最初は必ず一字下げを挿入する．句読点は「、」と「。」の組み合わせか「，」と「．」の組み合わせに統一する．
-括弧の記号については，（このように）全角の括弧を用いると適切なスペースが付与されるため，(このような)半角の括弧よりも見栄えが良くなる．
-但し，英文中の括弧では必ず半角括弧とスペースを組み合わせて記述すること．
-物理単位については，4.2~mや5.08~kgのように，半角スペースを空けたうえで付与することが望ましい．
-
-%----------------------------------------------
-\section{図表と数式の記述方法}
+\section{従来手法}
 %----------------------------------------------
 
 %----------------------------------------------
-\subsection{図表の挿入方法}
+\subsection{FDICAとパーミュテーション問題}
 %----------------------------------------------
+FDICAは音源間の統計的独立性のみに基づいて分離行列を推定するため，分離音源のスケール及び順番に関して推定することができない．
+従って，FDICAの推定分離行列を$\hat{\bm{W}}_i$とすると，次式のような不定性が残る．
+\begin{align}
+	\hat{\bm{W}}_{i} &= \bm{D}_{i}\bm{P}_{i}  \bm{W}_{i} \label{eq:w_fdica}
+\end{align}
+ここで，$i=1,2,\cdots,I$は周波数ビンのインデクス，$\bm{W}_{i}$は分離行列，$\bm{P}_i \in \{0, 1\}^{N \times N}$は分離行列$\bm{W}_{i}$の行ベクトル$\bm{w}_{in}$の順番を入れ変えうるパーミュテーション行列（置換行列），
+$\bm{D}_i \in \mathbb{R}^{N \times N}$は，$\bm{w}_{in}$のスケールを変化させる可能性のある対角行列を表す．
 
-図表は必ず本文上部または下部に挿入する．
-本文の途中に挿入することの内容に注意せよ．
-図の挿入例を図\ref{fig:sample}に示す．
-このとき，図番号と図タイトルは図の中央下部に配置する．
-また，印刷時の品質を向上させるために，図は可能な限りラスタ形式ではなくベクタ形式で作成し挿入することを推奨する．
-さらに，表の挿入例を表\ref{table:sample}に示す．
-表の場合は表番号と表タイトルを表の中央上部に配置する．
-図番号・表番号及び図タイトル・表タイトルは本文と同じく10~ptの明朝系フォントとする．
-なお，読みやすさの向上ために，図表の上下には1行分の余白を設けることが望ましい（図\ref{fig:sample}と表\ref{table:sample}の間や上下を参照のこと）．
+従って，FDICAで推定される分離信号
+\begin{align}
+\bm{y}_{ij} &= \hat{\bm{W}}_i\bm{x}_{ij} \\
+&=\left[ y_{ij1},y_{ij2}, \cdots, y_{ijn}, \cdots, y_{ijN} \right]^\mathrm{T}~\in \mathbb{C}^{N} \label{eq:sepSig}
+\end{align}
+は，推定音源の順番やスケールが周波数毎にばらばらになっている状態である．その概念図をFig.~\ref{fig:permu}に示す．
+ここで，$\bm{y}_{ij}$は分離信号，$\bm{x}_{ij}$は観測信号，$j=1,2,\cdots,J$は時間フレーム数を表す．
+FDICAで得られる（パーミュテーション問題が生じている状態の）推定信号$\bm{y}_{ij}$の$n$番目のスペクトログラムを$\bm{Y}_n \in \mathbb{C}^{I \times J}$と定義する．
+このうち，$\bm{D}_i$によって生じるスケールの任意性は，プロジェクションバック法\cite{Matsuoka2001_PB}で解析的に復元可能である．
+一方で，$\bm{P}_i$によって生じる分離信号の順番の任意性（パーミュテーション）を$I$個の全周波数ビンに関して復元することは，組み合わせ爆発が生じるため容易ではない．
+このパーミュテーション問題を解決する処理は次式で表される．
+\begin{align}
+\bm{z}_{ij} &= \bm{P}_{i}^{-1}\bm{D}_{i}^{-1}\bm{y}_{ij} \label{eq:z}
+\end{align}
+従って，パーミュテーション問題の解決とは，全周波数ビンにわたって$\bm{P}_{i}^{-1}$を求める問題として解釈できる．
 
-%-%-%-%-%-%-%-%-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
-  \centering
-  \vspace{0pt} % 図上部の余白調整
-  \includegraphics[width=0.8\columnwidth]{image.pdf}
-  \vspace{0pt} % 図とキャプション間の余白調整
-  \caption{図の挿入例}
-  \vspace{0pt} % キャプション下部の余白調整
-  \label{fig:sample}
+  \begin{center}
+      \includegraphics[width=0.95\columnwidth]{figures/permutation_image.eps}
+  \end{center}
+  \vspace{-8pt}
+\caption{Permutation problem in FDICA, where $N=M=2$.}
+\label{fig:permu}
 \end{figure}
-%-%-%-%-%-%-%-%-%
-
-%-%-%-%-%-%-%-%-%
-\begin{table}[t]
-  \centering
-  \caption{表の挿入例}
-  \label{table:sample}
-  \vspace{0pt} % キャプション下部の余白調整
-  \begin{tabular}{|c|c|c|c|} \hline
-    項目 & 数値1 & 数値2 & 数値3 \\ \hline
-    A & 1 & 5 &  9 \\ \hline
-    B & 2 & 6 & 10 \\ \hline
-    C & 3 & 7 & 11 \\ \hline
-    D & 4 & 8 & 12 \\ \hline
-  \end{tabular}
-  \vspace{10pt} % 表下部の余白調整
-\end{table}
-%-%-%-%-%-%-%-%-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %----------------------------------------------
-\subsection{数式の挿入方法}
+\section{提案手法}
 %----------------------------------------------
+
+%----------------------------------------------
+\subsection{DNNの入出力}
+%----------------------------------------------
+\red{同一音源に属する成分の相関を強調するため，推定信号$(\bm{Y}_1, \bm{Y}_2)$のパワースペクトラム$(|\bm{Y}_1|^{.2}, |\bm{Y}_2|^{.2})$の比率に変換する正規化\cite{Permutation_solverBSS}を施す．}
+推定信号の正規化振幅スペクトログラム$(\overline{\bm{Y}}_1, \overline{\bm{Y}}_2)$から，時間フレーム$j$を中心とする局所時間振幅スペクトログラムを抽出し，一次元に整形（ベクトル化）したものをDNNの入力とした．
+DNNによる出力は次式で表される．
+\begin{align}
+    \red{\hat{\bm{l}}_j = \mathrm{DNN}(\bm{d}_j) \in [ 0, 1 ]^{2I}}
+\end{align}
+ここで，$\hat{\bm{l}}_j = [ \hat{l}_{11j}, \hat{l}_{21j}, \cdots, \hat{l}_{I1j}, \hat{l}_{12j}, \hat{l}_{22j}, \cdots, \hat{l}_{I2j} ]^\mathrm{T}$は出力である予測ベクトルを表す．
+またDNNの出力にはsoftmax関数を用い，確率値とした．
+2つのパーミュテーション問題が生じている入力信号$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$の各周波数成分のそれぞれが
+「1番目の音源の成分である確率$l_{i1}$」と「2番目の音源の成分である確率$l_{i2}$」を入力ベクトルから予測したものと定義し，提案手法ではこの定義に基づいて正確な予測ができるDNNを学習する．
+
+%----------------------------------------------
+\subsection{DNNの構造}
+%----------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+  \begin{center}
+      \includegraphics[width=0.8\columnwidth]{figures/architecture_DNN.pdf}
+  \end{center}
+  \vspace{-8pt}
+\caption{DNN architecture.}
+\label{fig:Dnnmodel}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Fig.~\ref{fig:Dnnmodel}に提案深層パーミュテーション解決法で用いるDNNの構造を示す．
+DNNは入力層，隠れ層3層，及び出力層の計5層の全結合層からなるMLPとなっている．
+
+%----------------------------------------------
+\subsection{DNN学習時の損失関数}
+%----------------------------------------------
+損失関数には平均二乗誤差（MSE）を用いる．
+具体的には．DNNの出力である予測ベクトルに従って，推定信号$(\bm{Y}_1, \bm{Y}_2)$を並び替えを行い正解の分離信号の間で平均二乗誤差（MSE）を使用する．
+
 
 本文中に数式を挿入する場合は，次に示すように中央寄せすると良い．
 \begin{align}
@@ -217,16 +231,17 @@ TeXのコンパイラは恐らく最もスタンダードであるpdfpLaTeXを�
 %\itemsep 3pt % 項目の間隔微調整用
 %\fontsize{8pt}{10pt}\selectfont  % 項目のフォントサイズ微調整用
 
-\bibitem{sample1}
-  高松太郎，詫間花子，香川一郎,
-  ``1つめの参考文献のタイトル,''
-  {\em 2020年○○学会講演論文集}, pp.~278--280, 2020.
+\bibitem{ICA}
+P.~Comon, ``Independent component analysis, a new concept?," {\em Signal Process.}, vol. 36, no. 3, pp. 287--314, 1994.
 
-\bibitem{sample2}
-  T.~Takamatsu, H. Takuma, and I. Kagawa, 
-  ``Title of reference article,''
-  {\em Proc. International Conference on XXX}, pp.~278--280, 2020.
+\bibitem{FDICA}
+P.~Smaragdis, ``Blind separation of convolved mixtures in the frequency domain," {\em Neurocomputing}, vol. 22, pp. 21--34, 1998.
 
+\bibitem{Matsuoka2001_PB}
+K.~Matsuoka and S.~Nakashima, ``Minimal distortion principle for blind source separation,'' {\em Proc. ICA}, pp. 722--727, 2001.
+
+\bibitem{Permutation_solverBSS}
+\red{H. Sawada, S. Araki, and S. Makino, ``Measuring dependence of bin-wise separated signals for permutation alignment in frequency-domain BSS,'' Proc. ISCAS, pp. 3247--3250, 2007.}
 
 \end{thebibliography}
 
