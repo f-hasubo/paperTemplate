@@ -1,13 +1,13 @@
 %---------------------------------
 \chapter{Birkhoff--von~Neumannの定理}
-\label{vonNeumann}
+\label{chap:vonNeumann}
 %---------------------------------
 サイズ$N$の正方行列$\bm{D}$が二重確率行列であるとき，$\bm{D}$はサイズ$N$の全てのパーミュテーション行列$\{\bm{P}_i\}_{i=1}^{N!}$の凸結合で表せる．
-即ち，凸結合の係数$\sigma_i \geq 0$を用いて
+即ち，凸結合の係数$\sigma_i \geq 0$を用いて次式が成立する．
 \begin{align}
     \bm{D} = \sum_{i=1}^{N!} \sigma_i \bm{P}_i
 \end{align}
-但し，$\sum_{i=1}^{N!} \sigma_i = 1$である．
+但し，$\sigma_i$は凸結合係数であるため，$\sum_{i=1}^{N!} \sigma_i = 1$を満たす．
 %---------------------------------
 \chapter{人工データに対する予測結果}
 \label{chap:artificial}
@@ -19,12 +19,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/01mat_4block.pdf}
+    \subfloat[Accuracy for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/01mat_4block.pdf}
+    \vspace{-15pt}
     \label{fig:acc_01mat_4block}}
     \\
-    \subfloat[Spectrogram of estimated signal and predictive separation signal.]{\includegraphics[clip, width=5.0in]{figures/01mat_4block.pdf}
+    \subfloat[Input matrices with permutation problem (upper) and permutation-aligned matrices using predicted results (bottom).]{\includegraphics[clip, width=5.0in]{figures/01mat_4block.pdf}
     \label{fig:spec_01mat_4block}}  
-    \caption{Experimental results using matrix of Fig~\ref{fig:01mat_spec} (randomly shuffle every four rows).}
+    \caption{Experimental results with $\gamma=4$ using artificial source matrices of Fig.~\ref{fig:01mat_spec}.}
     \label{fig:01mat_4block}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,12 +33,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/25stripe_4block.pdf}
+    \subfloat[Accuracy for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/25stripe_4block.pdf}
+    \vspace{-15pt}
     \label{fig:acc_25mat_4block}}
     \\
-    \subfloat[Spectrogram of estimated signal and predictive separation signal.]{\includegraphics[clip, width=5.0in]{figures/25stripe_4block.pdf}
+    \subfloat[Input matrices with permutation problem (upper) and permutation-aligned matrices using predicted results (bottom).]{\includegraphics[clip, width=5.0in]{figures/25stripe_4block.pdf}
     \label{fig:spec_25mat_4block}}  
-    \caption{Experimental results using the matrix of Fig~\ref{fig:25stripe_spec} (randomly shuffle four rows).}
+    \caption{Experimental results with $\gamma=4$ using artificial source matrices of Fig.~\ref{fig:25stripe_spec}.}
     \label{fig:25mat_4block}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,12 +47,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/stripe_4block.pdf}
+    \subfloat[Accuracy for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/stripe_4block.pdf}
+    \vspace{-15pt}
     \label{fig:acc_stripe_4block}}
     \\
-    \subfloat[Spectrogram of estimated signal and predictive separation signal.]{\includegraphics[clip, width=5.0in]{figures/stripe_4block.pdf}
+    \subfloat[Input matrices with permutation problem (upper) and permutation-aligned matrices using predicted results (bottom).]{\includegraphics[clip, width=5.0in]{figures/stripe_4block.pdf}
     \label{fig:spec_stripe_4block}}  
-    \caption{Experimental results using the matrix of Fig~\ref{fig:stripe_spec} (randomly shuffle four rows).}
+    \caption{Experimental results with $\gamma=4$ using artificial source matrices of Fig.~\ref{fig:stripe_spec}.}
     \label{fig:stripe_4block}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,12 +61,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/01mat_8block.pdf}
+    \subfloat[Accuracy for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/01mat_8block.pdf}
+    \vspace{-15pt}
     \label{fig:acc_01mat_8block}}
     \\
-    \subfloat[Spectrogram of estimated signal and predictive separation signal.]{\includegraphics[clip, width=5.0in]{figures/01mat_8block.pdf}
+    \subfloat[Input matrices with permutation problem (upper) and permutation-aligned matrices using predicted results (bottom).]{\includegraphics[clip, width=5.0in]{figures/01mat_8block.pdf}
     \label{fig:spec_01mat_8block}}  
-    \caption{Experimental results using matrix of Fig~\ref{fig:01mat_spec} (randomly shuffle eight rows).}
+    \caption{Experimental results with $\gamma=8$ using artificial source matrices of Fig.~\ref{fig:01mat_spec}.}
     \label{fig:01mat_8block}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,12 +75,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/25stripe_8block.pdf}
+    \subfloat[Accuracy for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/25stripe_8block.pdf}
+    \vspace{-15pt}
     \label{fig:acc_25mat_8block}}
     \\
-    \subfloat[Spectrogram of estimated signal and predictive separation signal.]{\includegraphics[clip, width=5.0in]{figures/25stripe_8block.pdf}
+    \subfloat[Input matrices with permutation problem (upper) and permutation-aligned matrices using predicted results (bottom).]{\includegraphics[clip, width=5.0in]{figures/25stripe_8block.pdf}
     \label{fig:spec_25mat_8block}}  
-    \caption{Experimental results using the matrix of Fig~\ref{fig:25stripe_spec} (randomly shuffle eight rows).}
+    \caption{Experimental results with $\gamma=8$ using artificial source matrices of Fig.~\ref{fig:25stripe_spec}.}
     \label{fig:25mat_8block}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,12 +89,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[!t]
     \centering
-    \subfloat[Percentage of correct answers for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/stripe_8block.pdf}
+    \subfloat[Accuracy for training and validation data.]{\includegraphics[clip, width=4.5in]{figures/graph/stripe_8block.pdf}
+    \vspace{-15pt}
     \label{fig:acc_stripe_8block}}
     \\
-    \subfloat[Spectrogram of estimated signal and predictive separation signal.]{\includegraphics[clip, width=5.0in]{figures/stripe_8block.pdf}
+    \subfloat[Input matrices with permutation problem (upper) and permutation-aligned matrices using predicted results (bottom).]{\includegraphics[clip, width=5.0in]{figures/stripe_8block.pdf}
     \label{fig:spec_stripe_8block}}  
-    \caption{Experimental results using the matrix of Fig~\ref{fig:stripe_spec} (randomly shuffle eight rows).}
+    \caption{Experimental results with $\gamma=8$ using artificial source matrices of Fig.~\ref{fig:stripe_spec}.}
     \label{fig:stripe_8block}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -48,7 +48,7 @@ $x_1(l)$及び$x_2(l)$とすると，2つの信号源の混合現象は次の連
     \end{bmatrix}}
 \end{align}
 この行列$\bm{A}$は混合行列と呼ばれる．
-観測信号ベクトル$\bm{x}(l) = \red{[x_1(l),x_2(l)]^\mathrm{T}}$
+観測信号ベクトル$\bm{x}(l) = \red{[x_1(l),x_2(l)]^\mathrm{T}}$，
 信号源ベクトル$\bm{s}(l) = \red{[s_1(l),s_2(l)]^\mathrm{T}}$
 及び混合行列$\bm{A}$を用いて，式(\ref{f:a1})及び(\ref{f:a2})の連立方程式は次式のように書き直せる．
 \begin{align}
@@ -86,7 +86,7 @@ ICA による信号源分離を理解する上での重要な概念として，�
     p(y_1,y_2) = p(y_1)p(y_2) \label{f:y}
 \end{align}
 ここで，$p(y_1)$及び$p(y_2)$はそれぞれ分離信号$y_1(l)$及び$y_2(l) $の生成モデルであり，$p(y_1, y_2)$は同時分布である．
-従ってICAによるBSSは，式(\blue{{\ref{f:s}}} \red{\ref{f:y}})が成立するような分離フィルタ$\bm{W}$を推定する問題であると解釈できる．
+従ってICAによるBSSは，式(\ref{f:y})が成立するような分離フィルタ$\bm{W}$を推定する問題であると解釈できる．
 上記の問題を定式化すると，次式のように書き表せる．
 \begin{align}
    \argmin_{\bm{W}}~ \mathfrak{I}(\bm{W})
@@ -96,7 +96,7 @@ ICA による信号源分離を理解する上での重要な概念として，�
 \end{align}
 ここで，$\mathfrak{D}_{\red{\mathrm{KL}}}[p(s)||q(s)]$はKullback--Leibler（KL）ダイバージェンスと呼ばれ，2つの分布間（$p(s)$及び$q(s)$）の距離を測る関数として次式のように定義される．
 \begin{align}
-\mathfrak{D}_{\red{\mathrm{KL}}}[p(s)||q(s)] = \int{p(s){\rm log}~\frac{p(s)}{q(s)}}ds　\label{f:kld}
+\mathfrak{D}_{\red{\mathrm{KL}}}[p(s)||q(s)] = \int{p(s){\rm log}~\frac{p(s)}{q(s)}}ds \label{f:kld}
 \end{align}
 また，分離\blue{フィルタ}\red{行列}$\bm{W}$で\red{観測信号を}線形変換する前（$\bm{x}$）と後（$\bm{y}$）の確率変数を考えたとき，それぞれ
 の同時分布$p(\bm{y}) = p(\red{y_1,y_2}) $と$p(\bm{x}) = p(\red{x_1,x_2})$の間には，次式が成立する．
@@ -155,12 +155,11 @@ ICAでは，式(\ref{f:newcost})\red{が最小化される分離行列$\bm{W}$�
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 STFTはFig.~\ref{fig:stft}に示すような時間的に変化するスペクトルを表現するための手法である．
-\red{いま，音響信号の時間波形を次式で定義する．
+いま，音響信号の時間波形を次式で定義する．
 \begin{align}
   \mathbf{x} = [\mathrm{x}(1), \mathrm{x}(2), \dots, \mathrm{x}(l), \dots, \mathrm{x}(L)]^\mathrm{T} \in \mathbb{R}^L
 \end{align}
-}
-STFT の分析窓関数の長さ及びシフト長をそれぞれ$Q$及び$\tau$としたとき，時間領域の信号
+STFTの分析窓関数の長さ及びシフト長をそれぞれ$Q$及び$\tau$としたとき，時間領域の信号
 $\red{\mathbf{x}}$の$j$番目の短時間区間（時間フレーム）の信号は次式で表される．
 \begin{align}
     \bm{\red{\mathbf{x}}}^{(j)} &= \left[\red{\mathrm{x}}\left((j-1)\tau+1\right), \red{\mathrm{x}}\left((j-1)\tau+2\right), \cdots , \red{\mathrm{x}}\left((j-1)\tau+Q\right) \right]^{\red{\mathrm{T}}}\\
@@ -193,7 +192,7 @@ $\iota$は虚数単位は\blue{分析窓関数}\red{短時間信号$\mathbf{x}^{
 \label{sec:formularization}
 %----------------------------------------------
 \blue{今一度}\red{本節以降}，音源数と観測チャネル数（マイクロホン数）をそれぞれ$N$及び$M$とする．
-また，\blue{各観測音源信号をSTFTすることで得られる，各時間周波数における音声信号，} \blue{混合信号，及び分離信号をそれぞれ} \red{音源信号，観測信号，及び分離信号の時間周波数毎の成分をそれぞれ次式で表す．}
+また，\red{音源信号，観測信号，及び分離信号の時間周波数毎の成分をそれぞれ次式で表す．}
 \begin{align}
   \bm{s}_{ij} &= \left[
 	s_{ij\red{1}},s_{ij\red{2}}, \cdots, s_{ij\red{n}}, \cdots, s_{ij\red{N}} 
@@ -319,7 +318,7 @@ $\bm{D}_i \in \mathbb{R}^{N \times N}$は，$\bm{w}_{in}$のスケールを変�
 \red{具体的には，$I$個の周波数ビンのそれぞれで$N$個の音源の順番は$N!$種類あるため，全周波数のパーミュテーションは$(N!)^I$通り存在することになり，その内の正解（全周波数で同一の音源パーミュテーションとなるもの）は$N!$個である．}
 この問題は，一般的にパーミュテーション問題と呼ばれる．
 パーミュテーション問題の概要をFig.~\ref{fig:permu}に示す．
-ここで，FDICAで\red{得られる（パーミュテーション問題が生じている状態の）推定}信号$\bm{y}_{ij}$の\red{$n$番目のスペクトログラムを}$\bm{Y}_n \in \mathbb{C}^{I \times J}$\red{と定義している}．
+ここで，FDICAで得られる（パーミュテーション問題が生じている状態の）推定信号$\bm{y}_{ij}$の$n$番目のスペクトログラムを$\bm{Y}_n \in \mathbb{C}^{I \times J}$と定義している．
 FDICA直後の$\bm{Y}_n$に注目すると，周波数毎での音源分離は達成できている．
 しかし，時間周波数構造全体としては，異なる\red{音源}の\red{分離成分}が1つの\red{時間周波数内}に混在していることが分かる．
 これがパーミュテーション問題であり，ICAの分離信号の順番に関する不定性に起因して発生している．

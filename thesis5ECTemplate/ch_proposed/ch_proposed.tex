@@ -9,9 +9,8 @@
 \red{さらに，既存の深層パーミュテーション解決法では，音源数$N$の増加に伴ってアルゴリズムが極端に複雑になってしまう課題について述べた．}
 本章では，\blue{組み合せ爆発を起こすことのない，DNNを用いたデータ駆動型パーミュテーション解決法を新たに提案する．}
 \red{音源数$N$が増加した場合でもアルゴリズムが複雑化することのない深層パーミュテーション解決法を新たに提案する．}
-\blue{{\ref{sec:moti}}節では，IVAやILRMAのようなブラインド（教師無し）なパーミュテーション解決法における課題と従来の深層パーミュテーション解決法における課題を述べ，データ駆動型の教師ありパーミュテーション解決法を新たに提案する動機について明らかにする．}
 \red{まず\ref{sec:moti}節では，BSSにおいて深層学習を用いてパーミュテーション問題の解決を目指す動機について述べる．}
-\ref{sec:in-out}節及び\ref{sec:model}節で\red{は}，\blue{提案}\red{本論文で提案する深層}パーミュテーション解決法\blue{における}\red{の}DNNモデルの入出力及び\red{ネットワーク}構造を\red{それぞれ}説明する．
+\ref{sec:in-out}節及び\ref{sec:model}節で\red{は}，\red{本論文で提案する深層}パーミュテーション解決法\red{の}DNNモデルの入出力及び\red{ネットワーク}構造を\red{それぞれ}説明する．
 \ref{sec:loss}節及び\ref{sec:maj}節では，誤差逆伝播に用いる損失\red{関数}の取り方と\blue{パーミュテーション行列の並び替えに用いる}\red{パーミュテーション行列を正確に推定するモデルを学習するための}\blue{ラベルの取得方法}\red{入力データ及び正解データ（ラベル）の取得方法}を\red{それぞれ}説明する．
 \ref{sec:3matome}節で本章のまとめを述べる．
 
@@ -71,12 +70,19 @@ $\bm{P}_i^{-1}$の\blue{推定のみ失敗していることを示している�
 \section{DNNの入出力}
 \label{sec:in-out}
 %----------------------------------------------
-
-\red{提案する深層パーミュテーション解決法で用いられるDNNは複数の全結合層からなる多層パーセプトロン（multi-layer perceptron: MLP）を想定している．
-MLPの入出力はあらかじめ決められた次元数のベクトルでなければならない．今，観測信号$(\bm{X}_1, \bm{X}_2)$にFDICAを適用した場合を考える．FDICAからは，
-}パーミュテーション問題\blue{が生じた分離信号{$\bm{Y}_n$}が得られる．}
-\red{が発生した状態の推定信号$(\bm{Y}_1, \bm{Y}_2)$が得られる．}
-\red{ここで，同一音源に属する成分の相関を強調するため，推定信号$(\bm{Y}_1, \bm{Y}_2)$のパワースペクトラム$(|\bm{Y}_1|^{.2}, |\bm{Y}_2|^{.2})$の比率に変換する正規化\cite{Permutation_solverBSS}を施す．この処理は次式で表される．}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+    \begin{center}
+        \includegraphics[height=0.8\columnwidth]{figures/DNN_input.pdf}
+    \end{center}
+    \vspace{-8pt}
+	\caption{Input vector of DNN.}
+	\label{fig:DNN_input}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+提案する深層パーミュテーション解決法で用いられるDNNは複数の全結合層からなる多層パーセプトロン（multi-layer perceptron: MLP）を想定している．
+MLPの入出力はあらかじめ決められた次元数のベクトルでなければならない．今，観測信号$(\bm{X}_1, \bm{X}_2)$にFDICAを適用した場合を考える．FDICAからは，パーミュテーション問題\red{が発生した状態の推定信号$(\bm{Y}_1, \bm{Y}_2)$が得られる．}
+\red{ここで，同一音源に属する成分の相関を強調するため，推定信号$(\bm{Y}_1, \bm{Y}_2)$をパワースペクトログラム$(|\bm{Y}_1|^{.2}, |\bm{Y}_2|^{.2})$の比率に変換する正規化\cite{Permutation_solverBSS}を施す．この処理は次式で表される．}
 \begin{align}
     \red{\overline{\bm{Y}}_1 = \frac{|\bm{Y}_1|^{.2}}{|\bm{Y}_1|^{.2}+|\bm{Y}_2|^{.2}}} \in [0,1]^{I \times J}\\
     \red{{\overline{\bm{Y}}_2 = \frac{|\bm{Y}_2|^{.2}}{|\bm{Y}_1|^{.2}+|\bm{Y}_2|^{.2}}} \in [0,1]^{I \times J}}
@@ -94,24 +100,12 @@ MLPの入出力はあらかじめ決められた次元数のベクトルでな�
 	\label{fig:make_minispec}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\red{
-    \begin{align}
-        \check{\bm{Y}}_{j1} &= [ \overline{\bm{y}}_{(j-\beta)1}, \overline{\bm{y}}_{(j-\beta+1)1}, \cdots, \overline{\bm{y}}_{(j-1)1}, \overline{\bm{y}}_{j1}, \overline{\bm{y}}_{(j+1)1}, \cdots, \overline{\bm{y}}_{(j+\beta)1}  ] \in [ 0, 1 ]^{I\times (2\beta+1)} \label{eq:y_check1}\\
-        \check{\bm{Y}}_{j2} &= [ \overline{\bm{y}}_{(j-\beta)2}, \overline{\bm{y}}_{(j-\beta+1)2}, \cdots, \overline{\bm{y}}_{(j-1)2}, \overline{\bm{y}}_{j2}, \overline{\bm{y}}_{(j+1)2}, \cdots, \overline{\bm{y}}_{(j+\beta)2}  ] \in [ 0, 1 ]^{I\times (2\beta+1)} \label{eq:y_check2}
-    \end{align}
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[height=0.8\columnwidth]{figures/DNN_input.pdf}
-    \end{center}
-    \vspace{-8pt}
-	\caption{Input vector of DNN.}
-	\label{fig:DNN_input}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\red{ここで，$\overline{\bm{y}}_{jn}\in [0,1]^{I}$は正規化振幅スペクトログラム$\overline{\bm{Y}}_n$の$j$列目の列ベクトル（時間フレーム$j$の正規化振幅スペクトル）を表す．
-また，$\beta$（0以上の整数）は時間フレーム$j$の近傍時間フレームをどの程度DNNに入力するかを決めるパラメータである．}
+\begin{align}
+    \check{\bm{Y}}_{j1} &= [ \overline{\bm{y}}_{(j-\beta)1}, \overline{\bm{y}}_{(j-\beta+1)1}, \cdots, \overline{\bm{y}}_{(j-1)1}, \overline{\bm{y}}_{j1}, \overline{\bm{y}}_{(j+1)1}, \cdots, \overline{\bm{y}}_{(j+\beta)1}  ] \in [ 0, 1 ]^{I\times (2\beta+1)} \label{eq:y_check1}\\
+    \check{\bm{Y}}_{j2} &= [ \overline{\bm{y}}_{(j-\beta)2}, \overline{\bm{y}}_{(j-\beta+1)2}, \cdots, \overline{\bm{y}}_{(j-1)2}, \overline{\bm{y}}_{j2}, \overline{\bm{y}}_{(j+1)2}, \cdots, \overline{\bm{y}}_{(j+\beta)2}  ] \in [ 0, 1 ]^{I\times (2\beta+1)} \label{eq:y_check2}
+\end{align}
+ここで，$\overline{\bm{y}}_{jn}\in [0,1]^{I}$は正規化振幅スペクトログラム$\overline{\bm{Y}}_n$の$j$列目の列ベクトル（時間フレーム$j$の正規化振幅スペクトル）を表す．
+また，$\beta$（0以上の整数）は時間フレーム$j$の近傍時間フレームをどの程度DNNに入力するかを決めるパラメータである．
 \red{提案手法では，DNNの入力ベクトル}は，
 \red{式(\ref{eq:y_check1})及び(\ref{eq:y_check2})で得られる両信号の正規化局所時間振幅スペクトログラム$(\check{\bm{Y}}_{j1}, \check{\bm{Y}}_{j2})$をFig.~\ref{fig:DNN_input}のように一次元に整形（ベクトル化）したベクトルである．}
 \blue{これを{$\bm{x}_j$}とおくと，次式のように構成される．}
@@ -134,7 +128,7 @@ MLPの入出力はあらかじめ決められた次元数のベクトルでな�
     \subfloat[Calculatation of predicted permutation matrix.]{\includegraphics[clip, width=5.0in]{figures/cal_loss1.pdf}
     \label{fig:loss_process1}}
     \\
-    \subfloat[Calculation of MSE with PIT]{\includegraphics[clip, width=5.0in]{figures/cal_loss2_v2.pdf}
+    \subfloat[Calculation of MSE with PIT.]{\includegraphics[clip, width=5.0in]{figures/cal_loss2.pdf}
     \label{fig:loss_process2}}  
     \caption{Process of calculating predicted permutation matrix and loss function value.}
     \label{fig:loss}
@@ -164,7 +158,7 @@ MLPの入出力はあらかじめ決められた次元数のベクトルでな�
 ここで，$\hat{l}_{i1}$及び$\hat{l}_{i2}$は$\hat{\bm{L}}$の要素である．正解のパーミュテーション行列は順列を並び替える行列であるため，$N=2$の場合は式(\ref{eq:permu_mat_2dim})のいずれかとなる．
 推定パーミュテーション行列$\hat{\bm{P}}_{i}$は式\eqref{eq:estPermMat}であるため，予測が不完全であれば$\bm{I}$又は$\bm{1}-\bm{I}$にはならない可能性があるが，
 それでも$\hat{l}_{i1}+\hat{l}_{i2}=1$を満たすため，二重確率行列（doubly stochastic matrix: DSM）であることがわかる．
-また，Birkhoff--von Neumannの定理を考慮すると，パーミュテーション問題の発生している入力データからDSMを予測する提案手法のDNNは，
+また，Birkhoff--von Neumannの定理（付録\ref{chap:vonNeumann}参照）を考慮すると，パーミュテーション問題の発生している入力データからDSMを予測する提案手法のDNNは，
 考えうる全てのパーミュテーション行列に対する凸結合係数を推定していることになる．
 即ち，考えうるパーミュテーション行列の中でどの行列が正解かという確信度を予測していると解釈することもできる．
 }
@@ -269,15 +263,13 @@ Fig.~\ref{fig:Dnnmodel}に提案深層パーミュテーション解決法で用
 \blue{そして，DNNの予測結果を時間軸に関して多数決することで，より信頼性の高いラベル{$\widehat{\bm{L}}$}を得る．
 この処理は，次のように示される．}
 
-\red{一方，上記(b)については，純粋にパーミュテーション問題の解決精度の向上に寄与する処理である．
+一方，上記(b)については，純粋にパーミュテーション問題の解決精度の向上に寄与する処理である．
 DNNに入力する局所時間振幅スペクトログラム$(\check{\bm{Y}}_{1j}, \check{\bm{Y}}_{2j})$は推定信号$(\bm{Y}_1, \bm{Y}_2)$の各時間フレームにおいて抽出できるため，
 Fig.~\ref{fig:majority}に示すように$(\check{\bm{Y}}_{1j}, \check{\bm{Y}}_{2j})$の抽出範囲をストライドさせ，その全てである$( (\check{\bm{Y}}_{1j}, \check{\bm{Y}}_{2j}) )_{j=1}^J$を個々にDNNに入力し，
 全ての予測結果$( (\widehat{\check{\bm{Z}}}_{1j}, \widehat{\check{\bm{Z}}}_{2j}) )_{j=1}^J$を得ることができる．これらの予測結果を推定パーミュテーション行列$( \hat{\bm{P}}_{ij} )_{j=1}^J$に変換し，次式の多数決処理を適用する．
 \begin{align}
   \hat{\bm{P}}_{i} = \mathrm{round}\left( \frac{1}{J} \sum_{j=1}^J \hat{\bm{P}}_{ij} \right) \label{eq:majorityDecision}
 \end{align}
-}
-\blue{{$\widehat{\bm{L}}$}の値に従って，パーミュテーション行列を並び替えることで，パーミュテーション問題の解決を行う．}
 \red{なお，式\eqref{eq:binarization}のバイナリ行列への変換を適用しない場合においても，式\eqref{eq:majorityDecision}を計算することで時間方向の平均化ができるため，式\eqref{eq:majorityDecision}は上記(a)の適用の有無にかかわらず計算することが望ましい．}
 
 %----------------------------------------------
