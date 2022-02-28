@@ -62,12 +62,24 @@ Fig.~\ref{fig:bp}のような複数行のブロック単位でまとまって入
 入力はパーミュテーション問題を模擬するランダムな入れ替えを300パターン（重複無し）生成することで学習データを構築した．
 この300パターンの推定信号$(\bm{Y}_1, \bm{Y}_2)$に対するラベルはパーミュテーション問題が解決された信号であるため，常に同じ分離信号$(\bm{Z}_1, \bm{Z}_2)$となる．
 また，性能評価に用いる検証データとテストデータは同一とし，学習データの300パターンには含まれていないランダムな入れ替えでパーミュテーション問題を模擬した1パターンの推定信号$(\bm{Y}_1, \bm{Y}_2)$を用いた．
-DNNの最適化法にはAdam~\cite{adam}を用い，Adamのハイパーパラメータはそれぞれ$\varepsilon=1.0\times10^{-8}$，$\beta_1 = 0.9$，$\beta_2 = 0.999$，及び学習率$\eta=0.001$に設定した．
+DNNの最適化法にはAdam~\cite{adam}を用いる．
+Adamの重みの最適化アルゴリズムを次式に示す．
+\begin{align}
+  \mathbf{g}^{(t)} &=\nabla \mathcal{L}(\mathbf{w}^{(t)})\\
+  \mathbf{m}_t &=\rho_1\mathbf{m}_{t-1}+(1-\rho_1)\mathbf{g}^{(t)}　\label{eq:adam_begin}　\\ 
+  \mathbf{v}_t &=\rho_2\mathbf{v}_{t-1}+(1-\rho_2)(\mathbf{g}^{(t)})^2\\
+  \hat{\mathbf{m}}_t &=\frac{\mathbf{m}_t}{1-\rho_1^t}\\
+  \hat{\mathbf{v}}_t &=\frac{\mathbf{v}_t}{1-\rho_2^t}\\
+  \Delta\mathbf{w}^{(t)} &=-\frac{\eta}{\sqrt{\hat{\mathbf{v}}_t+\varepsilon}}\hat{\mathbf{m}}_t\label{eq:adam_end}　\\ 
+  \mathbf{w}^{(t+1)} &=\mathbf{w}^{(t)}+\Delta\mathbf{w}^{(t)}
+\end{align}
+ここで，$\mathcal{L}(\mathbf{w})$及び$\mathbf{w}$はそれぞれ損失関数及びDNNの最適化変数をまとめたベクトルであり，$\mathbf{m}_t$及び$\mathbf{v}_t$はいずれも過去の勾配変化を表すモーメンタムと呼ばれる量である．
+また，上付き文字の$t$は最適化（変数更新）の反復回数を表す．
+$\mathbf{m}_t$及び$\mathbf{v}_t$が考慮されていることにより，変数更新における振動を抑えながら高速かつ安定な最適化が可能となる．
+式\eqref{eq:adam_begin}--\eqref{eq:adam_end}中のハイパーパラメータはそれぞれ標準的な設定値である$\varepsilon=1.0\times10^{-8}$，$\rho_1 = 0.9$，$\rho_2 = 0.999$，及び学習率$\eta=0.001$に設定した．
 その他の学習パラメータについては，バッチサイズを8，エポック数を1000として誤差逆伝播による学習を行った．
 
 深層パーミュテーション解決法の性能を評価するための客観評価尺度には，正しく並び替えを行うことができた行の割合，即ち検証データに対する正答率を用いる．
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \begin{center}
